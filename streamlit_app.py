@@ -163,7 +163,7 @@ LOGOS = [
     {"file": "logo_prs.png",       "width": 45},
     {"file": "logo_divisi.png",    "width": 55},
     {"file": "logo_telkom.png",    "width": 60},
-    {"file": "logo_danantara.png", "width": 150},
+    {"file": "logo_danantara.png", "width": 70},
 ]
 
 
@@ -188,7 +188,7 @@ def render_logos():
         {imgs_html}
     </div>
     """, unsafe_allow_html=True)
-    
+
 
 def _read_sheets_into(data, is_real, file_like, source_label):
     try:
