@@ -161,7 +161,7 @@ LOGO_DIR = "assets"
 LOGOS = [
     {"file": "logo_prs.png",       "width": 40},
     {"file": "logo_divisi.png",    "width": 40},
-    {"file": "logo_telkom.png",    "width": 100},
+    {"file": "logo_telkom.png",    "width": 80},
     {"file": "logo_danantara.png", "width": 80},
 ]
 
