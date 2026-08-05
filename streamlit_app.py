@@ -8,6 +8,7 @@ Struktur:
 """
 
 import os
+import base64
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -159,9 +160,9 @@ SAVED_DATA_PATH = "saved_dashboard_data.xlsx"  # disimpan di server, dipakai ber
 # "width" = lebar logo dalam pixel — atur sendiri per logo sesuai proporsi aslinya.
 LOGO_DIR = "assets"
 LOGOS = [
-    {"file": "logo_prs.png",       "width": 40},
-    {"file": "logo_divisi.png",    "width": 40},
-    {"file": "logo_telkom.png",    "width": 80},
+    {"file": "logo_prs.png",       "width": 70},
+    {"file": "logo_divisi.png",    "width": 90},
+    {"file": "logo_telkom.png",    "width": 100},
     {"file": "logo_danantara.png", "width": 80},
 ]
 
@@ -170,10 +171,20 @@ def render_logos():
     existing = [l for l in LOGOS if os.path.exists(os.path.join(LOGO_DIR, l["file"]))]
     if not existing:
         return
+    row_height = 70  # tinggi baris logo (px) — semua logo center secara vertikal di tinggi ini
     cols = st.columns([2] + [1] * len(existing) + [2])
     for col, logo in zip(cols[1:-1], existing):
         with col:
-            st.image(os.path.join(LOGO_DIR, logo["file"]), width=logo["width"])
+            path = os.path.join(LOGO_DIR, logo["file"])
+            with open(path, "rb") as f:
+                b64 = base64.b64encode(f.read()).decode()
+            ext = path.rsplit(".", 1)[-1]
+            st.markdown(f"""
+            <div style="display:flex; align-items:center; justify-content:center; height:{row_height}px;">
+                <img src="data:image/{ext};base64,{b64}"
+                     style="width:{logo['width']}px; max-height:{row_height}px; object-fit:contain;">
+            </div>
+            """, unsafe_allow_html=True)
     st.write("")
 
 
