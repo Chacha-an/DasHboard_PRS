@@ -155,24 +155,25 @@ SHEET_MAP = {
 
 SAVED_DATA_PATH = "saved_dashboard_data.xlsx"  # disimpan di server, dipakai bersama semua device
 
-# Taruh file logo di folder "assets/" pada repo GitHub kamu, dengan nama-nama ini
+# Taruh file logo di folder "assets/" pada repo GitHub kamu.
+# "width" = lebar logo dalam pixel — atur sendiri per logo sesuai proporsi aslinya.
 LOGO_DIR = "assets"
 LOGOS = [
-    "logo_prs.png",
-    "logo_divisi.png",
-    "logo_telkom.png",
-    "logo_danantara.png",
+    {"file": "logo_prs.png",       "width": 70},
+    {"file": "logo_divisi.png",    "width": 90},
+    {"file": "logo_telkom.png",    "width": 100},
+    {"file": "logo_danantara.png", "width": 80},
 ]
 
 
 def render_logos():
-    existing = [f for f in LOGOS if os.path.exists(os.path.join(LOGO_DIR, f))]
+    existing = [l for l in LOGOS if os.path.exists(os.path.join(LOGO_DIR, l["file"]))]
     if not existing:
         return
     cols = st.columns([2] + [1] * len(existing) + [2])
-    for col, fname in zip(cols[1:-1], existing):
+    for col, logo in zip(cols[1:-1], existing):
         with col:
-            st.image(os.path.join(LOGO_DIR, fname), width=40)
+            st.image(os.path.join(LOGO_DIR, logo["file"]), width=logo["width"])
     st.write("")
 
 
