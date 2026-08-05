@@ -155,6 +155,26 @@ SHEET_MAP = {
 
 SAVED_DATA_PATH = "saved_dashboard_data.xlsx"  # disimpan di server, dipakai bersama semua device
 
+# Taruh file logo di folder "assets/" pada repo GitHub kamu, dengan nama-nama ini
+LOGO_DIR = "assets"
+LOGOS = [
+    "logo_prs.png",
+    "logo_divisi.png",
+    "logo_telkom.png",
+    "logo_danantara.png",
+]
+
+
+def render_logos():
+    existing = [f for f in LOGOS if os.path.exists(os.path.join(LOGO_DIR, f))]
+    if not existing:
+        return
+    cols = st.columns([2] + [1] * len(existing) + [2])
+    for col, fname in zip(cols[1:-1], existing):
+        with col:
+            st.image(os.path.join(LOGO_DIR, fname), use_container_width=True)
+    st.write("")
+
 
 def _read_sheets_into(data, is_real, file_like, source_label):
     try:
@@ -261,6 +281,7 @@ def goto(p):
 # OVERVIEW PAGE
 # ----------------------------------------------------------------------------
 def render_overview():
+    render_logos()
     st.markdown("<div style='text-align:center;padding-top:10px;'>", unsafe_allow_html=True)
     st.markdown("<div class='pill-title'>DASHBOARD OVERVIEW</div>", unsafe_allow_html=True)
     st.markdown("<div class='subtitle'>A monthly performance overview to guide strategy and highlight progress</div>", unsafe_allow_html=True)
