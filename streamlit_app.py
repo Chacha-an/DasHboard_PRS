@@ -171,7 +171,7 @@ def render_logos():
     existing = [l for l in LOGOS if os.path.exists(os.path.join(LOGO_DIR, l["file"]))]
     if not existing:
         return
-    row_height = 70  # tinggi baris logo (px) — semua logo center secara vertikal di tinggi ini
+    row_height = 100  # tinggi baris logo (px) — semua logo center secara vertikal di tinggi ini
     cols = st.columns([2] + [1] * len(existing) + [2])
     for col, logo in zip(cols[1:-1], existing):
         with col:
