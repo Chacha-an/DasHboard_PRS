@@ -296,10 +296,12 @@ def goto(p):
 # ----------------------------------------------------------------------------
 def render_overview():
     render_logos()
-    st.markdown("<div style='text-align:center;padding-top:10px;'>", unsafe_allow_html=True)
-    st.markdown("<div class='pill-title'>DASHBOARD OVERVIEW</div>", unsafe_allow_html=True)
-    st.markdown("<div class='subtitle'>A monthly performance overview to guide strategy and highlight progress</div>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown(f"""
+    <div style='text-align:center;padding-top:10px;'>
+        <div class='pill-title'>DASHBOARD OVERVIEW</div>
+        <div class='subtitle'>A monthly performance overview to guide strategy and highlight progress</div>
+    </div>
+    """, unsafe_allow_html=True)
     st.write("")
 
     c1, c2, c3 = st.columns(3)
