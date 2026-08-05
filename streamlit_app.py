@@ -21,7 +21,6 @@ st.set_page_config(
     page_title="PRS PriDE — Dashboard Overview",
     page_icon="📊",
     layout="wide",
-    initial_sidebar_state="expanded",
 )
 
 # ----------------------------------------------------------------------------
@@ -212,39 +211,43 @@ def make_template_excel():
 
 
 # ----------------------------------------------------------------------------
-# SIDEBAR
+# DATA PANEL — disembunyikan di balik ikon kecil (bukan sidebar), supaya tidak
+# semua orang yang buka dashboard langsung lihat opsi upload/reset data.
 # ----------------------------------------------------------------------------
-st.sidebar.markdown("### 📁 Data")
-uploaded = st.sidebar.file_uploader("Upload Excel data real (.xlsx)", type=["xlsx"])
-st.sidebar.download_button(
-    "⬇️ Download template Excel",
-    data=make_template_excel(),
-    file_name="template_dashboard_prs.xlsx",
-    help="Isi template ini dengan data real, lalu upload kembali di atas.",
-)
-with st.sidebar.expander("Format sheet yang dibaca"):
-    st.write("""
-    - **PRS_Bulanan**: Month, Realisasi, Target
-    - **PRS_KPI**: Metric, Value, Target
-    - **PRS_Portofolio**: Type, Value
-    - **PRS_Regional**: Region, Value
-    - **AM_Performance**: Name, Region, Target, Score, Komunikasi, Negosiasi, Kepatuhan, KepuasanKlien, Pelaporan
-    - **Action_Plan**: AM, Item, Due, Priority, Status
-    """)
+_spacer, _icon_col = st.columns([20, 1])
+with _icon_col:
+    with st.popover("⚙️"):
+        st.markdown("#### 📁 Data Dashboard")
+        uploaded = st.file_uploader("Upload Excel data real (.xlsx)", type=["xlsx"])
+        st.download_button(
+            "⬇️ Download template Excel",
+            data=make_template_excel(),
+            file_name="template_dashboard_prs.xlsx",
+            help="Isi template ini dengan data real, lalu upload kembali di atas.",
+        )
+        with st.expander("Format sheet yang dibaca"):
+            st.write("""
+            - **PRS_Bulanan**: Month, Realisasi, Target
+            - **PRS_KPI**: Metric, Value, Target
+            - **PRS_Portofolio**: Type, Value
+            - **PRS_Regional**: Region, Value
+            - **AM_Performance**: Name, Region, Target, Score, Komunikasi, Negosiasi, Kepatuhan, KepuasanKlien, Pelaporan
+            - **Action_Plan**: AM, Item, Due, Priority, Status
+            """)
 
-data, is_real, source = load_data(uploaded)
-n_real = sum(is_real.values())
-if source == "fresh_upload":
-    st.sidebar.success(f"✔ {n_real}/6 sheet tersimpan & aktif untuk SEMUA device yang buka dashboard ini.")
-elif source == "saved_on_server":
-    st.sidebar.info(f"📌 Memakai data tersimpan dari upload sebelumnya ({n_real}/6 sheet real).")
-else:
-    st.sidebar.info("Belum ada data yang pernah diupload — menampilkan data contoh.")
+        data, is_real, source = load_data(uploaded)
+        n_real = sum(is_real.values())
+        if source == "fresh_upload":
+            st.success(f"✔ {n_real}/6 sheet tersimpan & aktif untuk SEMUA device yang buka dashboard ini.")
+        elif source == "saved_on_server":
+            st.info(f"📌 Memakai data tersimpan dari upload sebelumnya ({n_real}/6 sheet real).")
+        else:
+            st.info("Belum ada data yang pernah diupload — menampilkan data contoh.")
 
-if os.path.exists(SAVED_DATA_PATH):
-    if st.sidebar.button("🗑️ Reset ke data contoh (hapus data tersimpan)"):
-        os.remove(SAVED_DATA_PATH)
-        st.rerun()
+        if os.path.exists(SAVED_DATA_PATH):
+            if st.button("🗑️ Reset ke data contoh (hapus data tersimpan)"):
+                os.remove(SAVED_DATA_PATH)
+                st.rerun()
 
 if "page" not in st.session_state:
     st.session_state.page = "overview"
