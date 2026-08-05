@@ -163,7 +163,7 @@ LOGOS = [
     {"file": "logo_prs.png",       "width": 40},
     {"file": "logo_divisi.png",    "width": 60},
     {"file": "logo_telkom.png",    "width": 70},
-    {"file": "logo_danantara.png", "width": 90},
+    {"file": "logo_danantara.png", "width": 105},
 ]
 
 
