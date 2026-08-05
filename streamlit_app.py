@@ -171,22 +171,24 @@ def render_logos():
     existing = [l for l in LOGOS if os.path.exists(os.path.join(LOGO_DIR, l["file"]))]
     if not existing:
         return
-    row_height = 100  # tinggi baris logo (px) — semua logo center secara vertikal di tinggi ini
-    cols = st.columns([2] + [1] * len(existing) + [2])
-    for col, logo in zip(cols[1:-1], existing):
-        with col:
-            path = os.path.join(LOGO_DIR, logo["file"])
-            with open(path, "rb") as f:
-                b64 = base64.b64encode(f.read()).decode()
-            ext = path.rsplit(".", 1)[-1]
-            st.markdown(f"""
-            <div style="display:flex; align-items:center; justify-content:center; height:{row_height}px;">
-                <img src="data:image/{ext};base64,{b64}"
-                     style="width:{logo['width']}px; max-height:{row_height}px; object-fit:contain;">
-            </div>
-            """, unsafe_allow_html=True)
-    st.write("")
-
+    row_height = 70  # tinggi baris logo (px)
+    imgs_html = ""
+    for logo in existing:
+        path = os.path.join(LOGO_DIR, logo["file"])
+        with open(path, "rb") as f:
+            b64 = base64.b64encode(f.read()).decode()
+        ext = path.rsplit(".", 1)[-1]
+        min_w = max(28, logo["width"] * 0.55)  # lebar minimum di layar sangat kecil
+        imgs_html += f'''<img src="data:image/{ext};base64,{b64}"
+            style="width:clamp({min_w}px, {logo['width']/6}vw, {logo['width']}px);
+                   max-height:{row_height}px; object-fit:contain;">'''
+    st.markdown(f"""
+    <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+                gap:22px; margin-bottom:14px;">
+        {imgs_html}
+    </div>
+    """, unsafe_allow_html=True)
+    
 
 def _read_sheets_into(data, is_real, file_like, source_label):
     try:
