@@ -160,9 +160,9 @@ SAVED_DATA_PATH = "saved_dashboard_data.xlsx"  # disimpan di server, dipakai ber
 # "width" = lebar logo dalam pixel — atur sendiri per logo sesuai proporsi aslinya.
 LOGO_DIR = "assets"
 LOGOS = [
-    {"file": "logo_prs.png",       "width": 70},
-    {"file": "logo_divisi.png",    "width": 90},
-    {"file": "logo_telkom.png",    "width": 100},
+    {"file": "logo_prs.png",       "width": 40},
+    {"file": "logo_divisi.png",    "width": 40},
+    {"file": "logo_telkom.png",    "width": 80},
     {"file": "logo_danantara.png", "width": 80},
 ]
 
