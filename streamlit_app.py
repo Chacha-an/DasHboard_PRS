@@ -172,7 +172,7 @@ def render_logos():
     cols = st.columns([2] + [1] * len(existing) + [2])
     for col, fname in zip(cols[1:-1], existing):
         with col:
-            st.image(os.path.join(LOGO_DIR, fname), use_container_width=True)
+            st.image(os.path.join(LOGO_DIR, fname), width=20)
     st.write("")
 
 
