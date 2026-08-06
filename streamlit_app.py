@@ -37,6 +37,7 @@ THEMES = {
         "TEXT": "#f5fbfd", "HEADER_TEXT": "#04222c", "SIDEBAR_BG": "#08283a",
         "BORDER": "rgba(140,220,235,0.18)", "ROWBORDER": "rgba(255,255,255,0.06)",
         "TOTALBG": "rgba(255,255,255,0.09)", "GLOW1": "rgba(63,214,240,0.10)", "GLOW2": "rgba(245,185,66,0.08)",
+        "GREEN_GLOW": "rgba(79,209,139,0.55)", "RED_GLOW": "rgba(240,104,95,0.55)",
     },
     "light": {
         "CYAN": "#0891b2", "GOLD": "#c2790a", "GREEN": "#0f9d58", "RED": "#d93025",
@@ -44,6 +45,7 @@ THEMES = {
         "TEXT": "#0a2f3f", "HEADER_TEXT": "#ffffff", "SIDEBAR_BG": "#ffffff",
         "BORDER": "rgba(8,60,75,0.15)", "ROWBORDER": "rgba(8,60,75,0.08)",
         "TOTALBG": "rgba(8,60,75,0.06)", "GLOW1": "rgba(8,145,178,0.07)", "GLOW2": "rgba(194,121,10,0.06)",
+        "GREEN_GLOW": "rgba(15,157,88,0.45)", "RED_GLOW": "rgba(217,48,37,0.45)",
     },
 }
 T = THEMES[st.session_state.theme]
@@ -52,6 +54,7 @@ BG, BG2, CARD, MUTED = T["BG"], T["BG2"], T["CARD"], T["MUTED"]
 TEXT, HEADER_TEXT, SIDEBAR_BG = T["TEXT"], T["HEADER_TEXT"], T["SIDEBAR_BG"]
 BORDER, ROWBORDER, TOTALBG = T["BORDER"], T["ROWBORDER"], T["TOTALBG"]
 GLOW1, GLOW2 = T["GLOW1"], T["GLOW2"]
+GREEN_GLOW, RED_GLOW = T["GREEN_GLOW"], T["RED_GLOW"]
 
 st.markdown(f"""
 <style>
@@ -120,6 +123,14 @@ div[data-testid="stMetric"]{{
 .am-row.r span:last-child{{ color:{RED}; }}
 .am-row.total{{ background:{TOTALBG}; font-weight:800; }}
 .am-row.total span{{ color:{TEXT}; }}
+
+/* Badge ACH & GAP — lebih mencolok dari baris biasa */
+.am-badge{{
+    display:inline-block; padding:3px 12px; border-radius:999px;
+    font-weight:900; font-size:12.5px; letter-spacing:0.3px;
+}}
+.am-badge.g{{ background:{GREEN}; color:#ffffff; box-shadow:0 0 12px {GREEN_GLOW}; }}
+.am-badge.r{{ background:{RED}; color:#ffffff; box-shadow:0 0 12px {RED_GLOW}; }}
 </style>
 """, unsafe_allow_html=True)
 
@@ -277,14 +288,14 @@ AM_DETAIL_SHEETS = ["AM_Scorecard_H1", "AM_Scorecard_Juli", "AM_Scorecard_Agustu
 
 
 def am_detail_to_sheets(am_detail):
-    """dict AM_DETAIL -> 4 DataFrame (untuk didownload sebagai template)."""
+    """dict AM_DETAIL -> 4 DataFrame (untuk didownload sebagai template).
+    Kolom ACH & GAP TIDAK disertakan -> sudah dihitung otomatis oleh sistem, tidak perlu diisi manual."""
     h1_rows, juli_rows, agustus_rows, cc_rows = [], [], [], []
     for name, d in am_detail.items():
         h1_rows.append({
-            "Name": name, "Real": d["rev_h1"]["real"], "ACH": d["rev_h1"]["ach"],
+            "Name": name, "Real": d["rev_h1"]["real"], "ACH": d["rev_h1"]["ach"],  # ACH di sini masih manual (lihat catatan di app)
             "KecukupanAllLOP": d["lop_visit_h1"]["kecukupan_all_lop"],
             "TargetVisit": d["lop_visit_h1"]["target_visit"], "JmlVisit": d["lop_visit_h1"]["jml_visit"],
-            "ACHVisit": d["lop_visit_h1"]["ach_visit"],
             "ScalBC": d["scal_h1"]["scal_bc"], "NetScaling": d["scal_h1"]["net_scaling"],
             "AO": d["rincian_h1"]["AO"], "MOPlus": d["rincian_h1"]["MO+"], "TERMIN": d["rincian_h1"]["TERMIN"],
             "RO": d["rincian_h1"]["RO"], "SO": d["rincian_h1"]["SO"], "DO": d["rincian_h1"]["DO"],
@@ -296,10 +307,9 @@ def am_detail_to_sheets(am_detail):
             "Name": name,
             "TargetScalRKAP": d["kecukupan_lop_juli"]["target_scal_rkap"],
             "KebutuhanLOP": d["kecukupan_lop_juli"]["kebutuhan_lop"],
-            "EstRevLOP": d["kecukupan_lop_juli"]["est_rev_lop"], "ACH": d["kecukupan_lop_juli"]["ach"],
+            "EstRevLOP": d["kecukupan_lop_juli"]["est_rev_lop"],
             "TargetCM": d["visit_juli"]["target_cm"], "JmlVisitCM": d["visit_juli"]["jml_visit_cm"],
-            "ACHCM": d["visit_juli"]["ach_cm"], "TargetYTD": d["visit_juli"]["target_ytd"],
-            "JmlVisitYTD": d["visit_juli"]["jml_visit_ytd"], "ACHYTD": d["visit_juli"]["ach_ytd"],
+            "TargetYTD": d["visit_juli"]["target_ytd"], "JmlVisitYTD": d["visit_juli"]["jml_visit_ytd"],
             "ScalBC": d["scal_juli"]["scal_bc"], "NetScaling": d["scal_juli"]["net_scaling"],
             "AO": d["rincian_juli"]["AO"], "MOPlus": d["rincian_juli"]["MO+"], "TERMIN": d["rincian_juli"]["TERMIN"],
             "RO": d["rincian_juli"]["RO"], "SO": d["rincian_juli"]["SO"], "DO": d["rincian_juli"]["DO"],
@@ -307,12 +317,9 @@ def am_detail_to_sheets(am_detail):
         })
         agustus_rows.append({
             "Name": name,
-            "EstRevF3F4": d["kecukupan_agustus"]["est_rev_f3f4"], "AchF3F4": d["kecukupan_agustus"]["ach_f3f4"],
-            "GapF3F4": d["kecukupan_agustus"]["gap_f3f4"], "EstRevAll": d["kecukupan_agustus"]["est_rev_all"],
-            "AchAll": d["kecukupan_agustus"]["ach_all"], "GapAll": d["kecukupan_agustus"]["gap_all"],
+            "EstRevF3F4": d["kecukupan_agustus"]["est_rev_f3f4"], "EstRevAll": d["kecukupan_agustus"]["est_rev_all"],
             "VisitCM": d["visit_agustus"]["visit_cm"], "TargetCM": d["visit_agustus"]["target_cm"],
-            "AchCM": d["visit_agustus"]["ach_cm"], "VisitYTD": d["visit_agustus"]["visit_ytd"],
-            "TargetYTD": d["visit_agustus"]["target_ytd"], "AchYTD": d["visit_agustus"]["ach_ytd"],
+            "VisitYTD": d["visit_agustus"]["visit_ytd"], "TargetYTD": d["visit_agustus"]["target_ytd"],
         })
         for c in d["list_cc"]:
             cc_rows.append({"Name": name, "CC": c["cc"], "KetLOP": c["lop"], "KetScal": c["scal"]})
@@ -320,7 +327,8 @@ def am_detail_to_sheets(am_detail):
 
 
 def build_am_detail_from_sheets(sheets):
-    """4 sheet Excel -> dict AM_DETAIL. Return None kalau sheet-nya tidak lengkap (fallback ke default)."""
+    """4 sheet Excel -> dict AM_DETAIL. Return None kalau sheet-nya tidak lengkap (fallback ke default).
+    ACH & GAP dihitung otomatis di halaman AM Performance, jadi TIDAK dibaca dari sini."""
     if not all(n in sheets and not sheets[n].empty for n in AM_DETAIL_SHEETS):
         return None
     h1 = sheets["AM_Scorecard_H1"].set_index("Name")
@@ -336,8 +344,8 @@ def build_am_detail_from_sheets(sheets):
         cc_rows = cc[cc["Name"] == name]
         result[name] = {
             "rev_h1": {"real": r["Real"], "ach": r["ACH"]},
-            "lop_visit_h1": {"kecukupan_all_lop": r["KecukupanAllLOP"], "jml_visit": r["JmlVisit"],
-                              "target_visit": r["TargetVisit"], "ach_visit": r["ACHVisit"]},
+            "lop_visit_h1": {"kecukupan_all_lop": r["KecukupanAllLOP"],
+                              "jml_visit": r["JmlVisit"], "target_visit": r["TargetVisit"]},
             "scal_h1": {"scal_bc": r["ScalBC"], "net_scaling": r["NetScaling"]},
             "rincian_h1": {"AO": r["AO"], "MO+": r["MOPlus"], "TERMIN": r["TERMIN"], "RO": r["RO"],
                            "SO": r["SO"], "DO": r["DO"], "MO-": r["MOMinus"], "ADJ": r["ADJ"], "TOTAL": r["TOTAL"]},
@@ -345,20 +353,19 @@ def build_am_detail_from_sheets(sheets):
                          "total": r["PacerTotal"], "kuadran": r["Kuadran"]},
             "kecukupan_lop_juli": ({} if j is None else {
                 "target_scal_rkap": j["TargetScalRKAP"], "kebutuhan_lop": j["KebutuhanLOP"],
-                "est_rev_lop": j["EstRevLOP"], "ach": j["ACH"]}),
+                "est_rev_lop": j["EstRevLOP"]}),
             "visit_juli": ({} if j is None else {
-                "target_cm": j["TargetCM"], "jml_visit_cm": j["JmlVisitCM"], "ach_cm": j["ACHCM"],
-                "target_ytd": j["TargetYTD"], "jml_visit_ytd": j["JmlVisitYTD"], "ach_ytd": j["ACHYTD"]}),
+                "target_cm": j["TargetCM"], "jml_visit_cm": j["JmlVisitCM"],
+                "target_ytd": j["TargetYTD"], "jml_visit_ytd": j["JmlVisitYTD"]}),
             "scal_juli": ({} if j is None else {"scal_bc": j["ScalBC"], "net_scaling": j["NetScaling"]}),
             "rincian_juli": ({} if j is None else {
                 "AO": j["AO"], "MO+": j["MOPlus"], "TERMIN": j["TERMIN"], "RO": j["RO"],
                 "SO": j["SO"], "DO": j["DO"], "MO-": j["MOMinus"], "ADJ": j["ADJ"], "TOTAL": j["TOTAL"]}),
             "kecukupan_agustus": ({} if a is None else {
-                "est_rev_f3f4": a["EstRevF3F4"], "ach_f3f4": a["AchF3F4"], "gap_f3f4": a["GapF3F4"],
-                "est_rev_all": a["EstRevAll"], "ach_all": a["AchAll"], "gap_all": a["GapAll"]}),
+                "est_rev_f3f4": a["EstRevF3F4"], "est_rev_all": a["EstRevAll"]}),
             "visit_agustus": ({} if a is None else {
-                "visit_cm": a["VisitCM"], "target_cm": a["TargetCM"], "ach_cm": a["AchCM"],
-                "visit_ytd": a["VisitYTD"], "target_ytd": a["TargetYTD"], "ach_ytd": a["AchYTD"]}),
+                "visit_cm": a["VisitCM"], "target_cm": a["TargetCM"],
+                "visit_ytd": a["VisitYTD"], "target_ytd": a["TargetYTD"]}),
             "list_cc": [{"cc": row["CC"], "lop": row["KetLOP"], "scal": row["KetScal"]}
                         for _, row in cc_rows.iterrows()],
         }
@@ -623,6 +630,45 @@ def _ach(v):
     return "g" if v >= 100 else "r"
 
 
+def _parse_m(v):
+    """Ubah angka format 'X,XXM' (koma = desimal ala Indonesia) jadi float. '5,21M' -> 5.21 ; 88 -> 88.0"""
+    if isinstance(v, (int, float)):
+        return float(v)
+    s = str(v).strip().upper().replace("M", "").replace(",", ".")
+    return float(s) if s else 0.0
+
+
+def _fmt_m(v):
+    """5.21 -> '5,21M' — dipakai untuk menampilkan hasil hitungan dalam format yang sama dengan input."""
+    return f"{v:.2f}".replace(".", ",") + "M"
+
+
+def _row_ach(label, value_pct):
+    """Baris ACH dengan badge warna mencolok (hijau/merah + glow), beda dari baris biasa."""
+    cls = _ach(value_pct)
+    arrow = "▲" if cls == "g" else "▼"
+    return f"<div class='am-row'><span>{label}</span><span class='am-badge {cls}'>{arrow} {value_pct:.0f}%</span></div>"
+
+
+def _row_gap(label, value_str):
+    """Baris GAP dengan badge merah mencolok (lower better -> selalu ditonjolkan sebagai perhatian)."""
+    return f"<div class='am-row'><span>{label}</span><span class='am-badge r'>{value_str}</span></div>"
+
+
+def _two_col_ach(l1, v1, l2, v2):
+    return f"""<div style="display:flex;">
+        <div style="flex:1;">{_row_ach(l1, v1)}</div>
+        <div style="flex:1;">{_row_ach(l2, v2)}</div>
+    </div>"""
+
+
+def _two_col_gap(l1, v1, l2, v2):
+    return f"""<div style="display:flex;">
+        <div style="flex:1;">{_row_gap(l1, v1)}</div>
+        <div style="flex:1;">{_row_gap(l2, v2)}</div>
+    </div>"""
+
+
 def render_am():
     st.button("← Overview", on_click=goto, args=("overview",))
     st.markdown(f"## AM <span style='color:{CYAN}'>Performance</span>", unsafe_allow_html=True)
@@ -638,13 +684,14 @@ def render_am():
     # ---------------- LEFT: Performance H1 ----------------
     with col_l:
         st.markdown(_panel("REV H1", [(None,
-            _row("REAL", d["rev_h1"]["real"]) + _row("ACH", f"{d['rev_h1']['ach']}%", _ach(d["rev_h1"]["ach"]))
+            _row("REAL", d["rev_h1"]["real"]) + _row_ach("ACH", d["rev_h1"]["ach"])
         )]), unsafe_allow_html=True)
 
         lv = d["lop_visit_h1"]
+        ach_visit = lv["jml_visit"] / lv["target_visit"] * 100 if lv["target_visit"] else 0  # RUMUS: Jml Visit / Target Visit
         body = (_row("KECUKUPAN ALL LOP", f"{lv['kecukupan_all_lop']}%", _ach(lv["kecukupan_all_lop"]))
                 + _row(f"JML VISIT (T. {lv['target_visit']} Visit)", lv["jml_visit"])
-                + _row("ACH VISIT", f"{lv['ach_visit']}%", _ach(lv["ach_visit"])))
+                + _row_ach("ACH VISIT", ach_visit))
         st.markdown(_panel("LOP & VISIT H1", [(None, body)]), unsafe_allow_html=True)
 
         sc = d["scal_h1"]
@@ -669,17 +716,22 @@ def render_am():
         r1, r2 = st.columns(2)
         with r1:
             k = d["kecukupan_lop_juli"]
+            est_rev_lop = _parse_m(k["est_rev_lop"])
+            kebutuhan_lop = _parse_m(k["kebutuhan_lop"])
+            ach_lop = est_rev_lop / kebutuhan_lop * 100 if kebutuhan_lop else 0  # RUMUS: Est Rev LOP / Kebutuhan LOP
             body1 = (_row("TARGET SCAL RKAP", k["target_scal_rkap"])
                      + _row("KEBUTUHAN LOP (2X T.SCAL)", k["kebutuhan_lop"])
                      + _row("EST REV LOP", k["est_rev_lop"])
-                     + _row("ACH", f"{k['ach']}%", _ach(k["ach"])))
+                     + _row_ach("ACH", ach_lop))
             v = d["visit_juli"]
+            ach_cm = v["jml_visit_cm"] / v["target_cm"] * 100 if v["target_cm"] else 0      # RUMUS: Jml Visit CM / Target CM
+            ach_ytd = v["jml_visit_ytd"] / v["target_ytd"] * 100 if v["target_ytd"] else 0  # RUMUS: Jml Visit YTD / Target YTD
             body2 = (_row("TARGET CM", v["target_cm"])
                      + _row("JML VISIT CM", v["jml_visit_cm"])
-                     + _row("ACH CM", f"{v['ach_cm']}%", _ach(v["ach_cm"]))
+                     + _row_ach("ACH CM", ach_cm)
                      + _row("TARGET YTD", v["target_ytd"])
                      + _row("JML VISIT YTD", v["jml_visit_ytd"])
-                     + _row("ACH YTD", f"{v['ach_ytd']}%", _ach(v["ach_ytd"])))
+                     + _row_ach("ACH YTD", ach_ytd))
             st.markdown(_panel("LOP & VISIT JULI (Cut off 3 Agustus)", [
                 ("KECUKUPAN ALL LOP", body1), ("VISIT JULI & YTD JULI", body2),
             ]), unsafe_allow_html=True)
@@ -698,16 +750,25 @@ def render_am():
         r3, r4 = st.columns(2)
         with r3:
             ka = d["kecukupan_agustus"]
+            est_rev_f3f4 = _parse_m(ka["est_rev_f3f4"])
+            est_rev_all = _parse_m(ka["est_rev_all"])
+            # RUMUS: dibandingkan terhadap Kebutuhan LOP Juli (sumber kebutuhan yang sama)
+            ach_f3f4 = est_rev_f3f4 / kebutuhan_lop * 100 if kebutuhan_lop else 0
+            ach_all = est_rev_all / kebutuhan_lop * 100 if kebutuhan_lop else 0
+            gap_f3f4 = kebutuhan_lop - est_rev_f3f4   # RUMUS: Kebutuhan LOP - Est Rev (Lower Better)
+            gap_all = kebutuhan_lop - est_rev_all
             body = (_two_col("EST REV LOP F3-F4", ka["est_rev_f3f4"], "", "EST REV ALL LOP", ka["est_rev_all"], "")
-                    + _two_col("ACH", f"{ka['ach_f3f4']}%", _ach(ka["ach_f3f4"]), "ACH", f"{ka['ach_all']}%", _ach(ka["ach_all"]))
-                    + _two_col("GAP (Lower Better)", ka["gap_f3f4"], "r", "GAP (Lower Better)", ka["gap_all"], "r"))
+                    + _two_col_ach("ACH", ach_f3f4, "ACH", ach_all)
+                    + _two_col_gap("GAP (Lower Better)", _fmt_m(gap_f3f4), "GAP (Lower Better)", _fmt_m(gap_all)))
             st.markdown(_panel("KECUKUPAN LOP AGUSTUS", [(None, body)]), unsafe_allow_html=True)
 
         with r4:
             va = d["visit_agustus"]
+            ach_cm_ag = va["visit_cm"] / va["target_cm"] * 100 if va["target_cm"] else 0      # RUMUS: Visit CM / Target CM
+            ach_ytd_ag = va["visit_ytd"] / va["target_ytd"] * 100 if va["target_ytd"] else 0  # RUMUS: Visit YTD / Target YTD
             body = (_two_col(f"VISIT CM (T. {va['target_cm']} Visit)", va["visit_cm"], "",
                               f"VISIT YTD (T. {va['target_ytd']} Visit)", va["visit_ytd"], "")
-                    + _two_col("ACH", f"{va['ach_cm']}%", _ach(va["ach_cm"]), "ACH", f"{va['ach_ytd']}%", _ach(va["ach_ytd"])))
+                    + _two_col_ach("ACH", ach_cm_ag, "ACH", ach_ytd_ag))
             st.markdown(_panel("VISIT AGUSTUS", [(None, body)], gold=True), unsafe_allow_html=True)
 
         st.markdown(_panel("LIST CC AM (Cut off 3 Agustus)", [(None, "")]), unsafe_allow_html=True)
