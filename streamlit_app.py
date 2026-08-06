@@ -25,83 +25,101 @@ st.set_page_config(
 )
 
 # ----------------------------------------------------------------------------
-# THEME / CSS (teal gelap + glow, senada dengan versi HTML)
+# THEME / CSS — mendukung mode Gelap & Terang, teal + glow tetap jadi ciri khasnya
 # ----------------------------------------------------------------------------
-CYAN = "#3fd6f0"
-GOLD = "#f5b942"
-GREEN = "#4fd18b"
-RED = "#f0685f"
-BG = "#06222e"
-CARD = "#0f3f52"
-MUTED = "#9fc4cf"
+if "theme" not in st.session_state:
+    st.session_state.theme = "dark"
+
+THEMES = {
+    "dark": {
+        "CYAN": "#3fd6f0", "GOLD": "#f5b942", "GREEN": "#4fd18b", "RED": "#f0685f",
+        "BG": "#06222e", "BG2": "#0a3244", "CARD": "#0f3f52", "MUTED": "#9fc4cf",
+        "TEXT": "#f5fbfd", "HEADER_TEXT": "#04222c", "SIDEBAR_BG": "#08283a",
+        "BORDER": "rgba(140,220,235,0.18)", "ROWBORDER": "rgba(255,255,255,0.06)",
+        "TOTALBG": "rgba(255,255,255,0.09)", "GLOW1": "rgba(63,214,240,0.10)", "GLOW2": "rgba(245,185,66,0.08)",
+    },
+    "light": {
+        "CYAN": "#0891b2", "GOLD": "#c2790a", "GREEN": "#0f9d58", "RED": "#d93025",
+        "BG": "#eef7fa", "BG2": "#dcf0f5", "CARD": "#ffffff", "MUTED": "#5b7c8a",
+        "TEXT": "#0a2f3f", "HEADER_TEXT": "#ffffff", "SIDEBAR_BG": "#ffffff",
+        "BORDER": "rgba(8,60,75,0.15)", "ROWBORDER": "rgba(8,60,75,0.08)",
+        "TOTALBG": "rgba(8,60,75,0.06)", "GLOW1": "rgba(8,145,178,0.07)", "GLOW2": "rgba(194,121,10,0.06)",
+    },
+}
+T = THEMES[st.session_state.theme]
+CYAN, GOLD, GREEN, RED = T["CYAN"], T["GOLD"], T["GREEN"], T["RED"]
+BG, BG2, CARD, MUTED = T["BG"], T["BG2"], T["CARD"], T["MUTED"]
+TEXT, HEADER_TEXT, SIDEBAR_BG = T["TEXT"], T["HEADER_TEXT"], T["SIDEBAR_BG"]
+BORDER, ROWBORDER, TOTALBG = T["BORDER"], T["ROWBORDER"], T["TOTALBG"]
+GLOW1, GLOW2 = T["GLOW1"], T["GLOW2"]
 
 st.markdown(f"""
 <style>
 .stApp {{
     background:
-      radial-gradient(1200px 600px at 15% -10%, rgba(63,214,240,0.10), transparent 60%),
-      radial-gradient(900px 500px at 100% 0%, rgba(245,185,66,0.08), transparent 55%),
-      linear-gradient(180deg, {BG}, #0a3244 40%, {BG});
-    color: #f5fbfd;
+      radial-gradient(1200px 600px at 15% -10%, {GLOW1}, transparent 60%),
+      radial-gradient(900px 500px at 100% 0%, {GLOW2}, transparent 55%),
+      linear-gradient(180deg, {BG}, {BG2} 40%, {BG});
+    color: {TEXT};
 }}
-[data-testid="stSidebar"] {{ background:#08283a; border-right:1px solid rgba(140,220,235,0.18); }}
-h1,h2,h3 {{ font-family:'Trebuchet MS', sans-serif; font-weight:800; }}
+[data-testid="stSidebar"] {{ background:{SIDEBAR_BG}; border-right:1px solid {BORDER}; }}
+h1,h2,h3 {{ font-family:'Trebuchet MS', sans-serif; font-weight:800; color:{TEXT}; }}
 
 .pill-title{{
     display:inline-block; padding:14px 46px; border-radius:999px;
-    border:1.5px solid {CYAN}; background:rgba(63,214,240,0.06);
-    box-shadow:0 0 24px rgba(63,214,240,0.35), inset 0 0 18px rgba(63,214,240,0.10);
-    font-size:32px; font-weight:900; letter-spacing:2px; margin-bottom:6px;
+    border:1.5px solid {CYAN}; background:{GLOW1};
+    box-shadow:0 0 24px {GLOW1}, inset 0 0 18px {GLOW1};
+    font-size:32px; font-weight:900; letter-spacing:2px; margin-bottom:6px; color:{TEXT};
 }}
 .subtitle{{ font-style:italic; color:{MUTED}; font-size:16px; margin-bottom:10px;}}
 
 .card-box{{
-    background:linear-gradient(160deg, {CARD}, #0a3244);
-    border:1px solid rgba(140,220,235,0.18); border-radius:20px; padding:26px 16px;
+    background:linear-gradient(160deg, {CARD}, {BG2});
+    border:1px solid {BORDER}; border-radius:20px; padding:26px 16px;
     text-align:center; height:100%;
 }}
 .card-box .icon{{ font-size:42px; margin-bottom:10px; }}
-.card-box h3{{ font-size:15px; letter-spacing:1px; margin-bottom:6px;}}
+.card-box h3{{ font-size:15px; letter-spacing:1px; margin-bottom:6px; color:{TEXT};}}
 .card-box p{{ font-size:12px; color:{MUTED}; }}
 
 .metric-card{{
-    background:{CARD}; border:1px solid rgba(140,220,235,0.18); border-radius:14px;
+    background:{CARD}; border:1px solid {BORDER}; border-radius:14px;
     padding:16px 18px; margin-bottom:6px;
 }}
 .metric-card .label{{ font-size:11px; color:{MUTED}; text-transform:uppercase; letter-spacing:1px; font-weight:600;}}
-.metric-card .value{{ font-size:28px; font-weight:800; margin-top:4px;}}
+.metric-card .value{{ font-size:28px; font-weight:800; margin-top:4px; color:{TEXT};}}
 .metric-card .delta.up{{ color:{GREEN}; font-size:12px; font-weight:600;}}
 .metric-card .delta.down{{ color:{RED}; font-size:12px; font-weight:600;}}
 
 div[data-testid="stMetric"]{{
-    background:{CARD}; border:1px solid rgba(140,220,235,0.18); border-radius:14px; padding:12px 16px;
+    background:{CARD}; border:1px solid {BORDER}; border-radius:14px; padding:12px 16px;
 }}
 .stButton>button{{
-    background:{CARD}; color:white; border:1px solid rgba(140,220,235,0.25); border-radius:10px;
+    background:{CARD}; color:{TEXT}; border:1px solid {BORDER}; border-radius:10px;
     font-weight:700;
 }}
 .stButton>button:hover{{ border-color:{CYAN}; color:{CYAN}; }}
 
 /* AM Performance scorecard style */
 .am-banner{{
-    background:linear-gradient(90deg, {CYAN}, #1a8fae); color:#04222c; font-weight:900;
+    background:{CYAN}; color:{HEADER_TEXT}; font-weight:900;
     font-size:24px; letter-spacing:1px; padding:20px 24px; border-radius:14px; margin:14px 0 18px;
-    box-shadow:0 0 24px rgba(63,214,240,0.35); text-align:center;
+    box-shadow:0 0 24px {GLOW1}; text-align:center;
 }}
-.am-panel{{ border:1px solid rgba(140,220,235,0.18); border-radius:10px; overflow:hidden; margin-bottom:16px; }}
-.am-header{{ background:{CYAN}; color:#04222c; font-weight:800; padding:9px 14px; text-align:center; font-size:12.5px; letter-spacing:0.4px;}}
+.am-panel{{ border:1px solid {BORDER}; border-radius:10px; overflow:hidden; margin-bottom:16px; background:{CARD}; }}
+.am-header{{ background:{CYAN}; color:{HEADER_TEXT}; font-weight:800; padding:9px 14px; text-align:center; font-size:12.5px; letter-spacing:0.4px;}}
 .am-header.gold{{ background:{GOLD}; }}
-.am-subheader{{ background:rgba(63,214,240,0.12); color:{CYAN}; font-weight:700; padding:6px 14px; text-align:center; font-size:11.5px;}}
-.am-subheader.gold{{ background:rgba(245,185,66,0.12); color:{GOLD}; }}
-.am-row{{ display:flex; justify-content:space-between; padding:7px 14px; font-size:12.5px; border-bottom:1px solid rgba(255,255,255,0.06);}}
+.am-subheader{{ background:{GLOW1}; color:{CYAN}; font-weight:700; padding:6px 14px; text-align:center; font-size:11.5px;}}
+.am-subheader.gold{{ background:{GLOW2}; color:{GOLD}; }}
+.am-row{{ display:flex; justify-content:space-between; padding:7px 14px; font-size:12.5px; border-bottom:1px solid {ROWBORDER};}}
 .am-row span:first-child{{ color:{MUTED}; }}
-.am-row span:last-child{{ font-weight:700; }}
-.am-row.g{{ background:rgba(79,209,139,0.14); }}
+.am-row span:last-child{{ font-weight:700; color:{TEXT}; }}
+.am-row.g{{ background:rgba(15,157,88,0.12); }}
 .am-row.g span:last-child{{ color:{GREEN}; }}
-.am-row.r{{ background:rgba(240,104,95,0.14); }}
+.am-row.r{{ background:rgba(217,48,37,0.12); }}
 .am-row.r span:last-child{{ color:{RED}; }}
-.am-row.total{{ background:rgba(255,255,255,0.09); font-weight:800; }}
-.am-row.total span{{ color:#f5fbfd; }}
+.am-row.total{{ background:{TOTALBG}; font-weight:800; }}
+.am-row.total span{{ color:{TEXT}; }}
 </style>
 """, unsafe_allow_html=True)
 
@@ -452,10 +470,14 @@ def make_template_excel():
 
 
 # ----------------------------------------------------------------------------
-# DATA PANEL — disembunyikan di balik ikon kecil (bukan sidebar), supaya tidak
-# semua orang yang buka dashboard langsung lihat opsi upload/reset data.
+# TOP-RIGHT ICONS — toggle tema (Gelap/Terang) + panel data (ikon kecil, bukan sidebar)
 # ----------------------------------------------------------------------------
-_spacer, _icon_col = st.columns([20, 1])
+_spacer, _theme_col, _icon_col = st.columns([18, 1, 1])
+with _theme_col:
+    _icon = "☀️" if st.session_state.theme == "dark" else "🌙"
+    if st.button(_icon, help="Ganti tampilan Terang/Gelap"):
+        st.session_state.theme = "light" if st.session_state.theme == "dark" else "dark"
+        st.rerun()
 with _icon_col:
     with st.popover("⚙️"):
         st.markdown("#### 📁 Data Dashboard")
@@ -539,7 +561,7 @@ def render_overview():
 # ----------------------------------------------------------------------------
 def render_prs():
     st.button("← Overview", on_click=goto, args=("overview",))
-    st.markdown("## PRS <span style='color:#3fd6f0'>Performance</span>", unsafe_allow_html=True)
+    st.markdown(f"## PRS <span style='color:{CYAN}'>Performance</span>", unsafe_allow_html=True)
 
     kpi = data["prs_kpi"]
     cols = st.columns(len(kpi))
@@ -603,7 +625,7 @@ def _ach(v):
 
 def render_am():
     st.button("← Overview", on_click=goto, args=("overview",))
-    st.markdown("## AM <span style='color:#3fd6f0'>Performance</span>", unsafe_allow_html=True)
+    st.markdown(f"## AM <span style='color:{CYAN}'>Performance</span>", unsafe_allow_html=True)
 
     names = list(data["am_detail"].keys())
     selected = st.selectbox("Pilih Account Manager", names, label_visibility="collapsed")
@@ -701,7 +723,7 @@ def render_am():
 # ----------------------------------------------------------------------------
 def render_action():
     st.button("← Overview", on_click=goto, args=("overview",))
-    st.markdown("## Action Plan <span style='color:#3fd6f0'>AM</span>", unsafe_allow_html=True)
+    st.markdown(f"## Action Plan <span style='color:{CYAN}'>AM</span>", unsafe_allow_html=True)
 
     a = data["action"]
     filt = st.radio("Filter", ["Semua", "Prioritas Tinggi", "Berjalan", "Selesai"],
@@ -722,7 +744,7 @@ def render_action():
         c = {"Selesai": GREEN, "Berjalan": CYAN, "Belum Mulai": MUTED}.get(v, MUTED)
         return f"color:{c}; font-weight:700;"
 
-    styled = view.style.applymap(color_priority, subset=["Priority"]).applymap(color_status, subset=["Status"])
+    styled = view.style.map(color_priority, subset=["Priority"]).map(color_status, subset=["Status"])
     st.dataframe(styled, use_container_width=True, hide_index=True)
 
     st.caption(f"Menampilkan {len(view)} dari {len(a)} action item.")
