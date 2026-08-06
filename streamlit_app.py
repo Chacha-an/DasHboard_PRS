@@ -131,6 +131,7 @@ div[data-testid="stMetric"]{{
 }}
 .am-badge.g{{ background:{GREEN}; color:#ffffff; box-shadow:0 0 12px {GREEN_GLOW}; }}
 .am-badge.r{{ background:{RED}; color:#ffffff; box-shadow:0 0 12px {RED_GLOW}; }}
+.am-badge.n{{ background:{CYAN}; color:{HEADER_TEXT}; box-shadow:0 0 12px {GLOW1}; }}
 </style>
 """, unsafe_allow_html=True)
 
@@ -200,22 +201,21 @@ def dummy_data():
 # ----------------------------------------------------------------------------
 AM_DETAIL_DEFAULT = {
     "Mochamad Faroq": {
-        "rev_h1": {"real": "11,24M", "ach": 111},
-        "lop_visit_h1": {"kecukupan_all_lop": 97, "jml_visit": 88, "target_visit": 96, "ach_visit": 92},
-        "scal_h1": {"scal_bc": "3,38M", "net_scaling": "2,27M"},
-        "rincian_h1": {"AO": "3,08M", "MO+": "0,10M", "TERMIN": "0,00M", "RO": "0,20M",
-                       "SO": "-0,03M", "DO": "-0,95M", "MO-": "-0,03M", "ADJ": "-0,10M", "TOTAL": "2,27M"},
+        "rev_h1": {"real": 11240000000, "ach": 111},
+        "lop_visit_h1": {"kecukupan_all_lop": 97, "jml_visit": 88, "target_visit": 96},
+        "scal_h1": {"scal_bc": 3380000000, "net_scaling": 2270000000},
+        "rincian_h1": {"AO": 3080000000, "MO+": 100000000, "TERMIN": 0, "RO": 200000000,
+                       "SO": -30000000, "DO": -950000000, "MO-": -30000000, "ADJ": -100000000, "TOTAL": 2270000000},
         "pacer_h1": {"result": 75, "process": 24, "total": 99, "kuadran": "KUADRAN 2"},
-        "kecukupan_lop_juli": {"target_scal_rkap": "1,87M", "kebutuhan_lop": "3,74M", "est_rev_lop": "5,21M", "ach": 139},
-        "visit_juli": {"target_cm": 16, "jml_visit_cm": 24, "ach_cm": 150,
-                       "target_ytd": 112, "jml_visit_ytd": 112, "ach_ytd": 100},
-        "scal_juli": {"scal_bc": "0,04M", "net_scaling": "-0,04M"},
-        "rincian_juli": {"AO": "0,02M", "MO+": "0,02M", "TERMIN": "0,00M", "RO": "0,00M",
-                         "SO": "0,00M", "DO": "-0,02M", "MO-": "0,00M", "ADJ": "-0,06M", "TOTAL": "-0,04M"},
-        "kecukupan_agustus": {"est_rev_f3f4": "0,30M", "ach_f3f4": 8, "gap_f3f4": "3,44M",
-                               "est_rev_all": "5,03M", "ach_all": 134, "gap_all": "-1,28M"},
-        "visit_agustus": {"visit_cm": 0, "target_cm": 16, "ach_cm": 0,
-                           "visit_ytd": 112, "target_ytd": 128, "ach_ytd": 88},
+        "kecukupan_lop_juli": {"target_scal_rkap": 1870000000, "kebutuhan_lop": 3740000000, "est_rev_lop": 5210000000},
+        "visit_juli": {"target_cm": 16, "jml_visit_cm": 24,
+                       "target_ytd": 112, "jml_visit_ytd": 112},
+        "scal_juli": {"scal_bc": 40000000, "net_scaling": -40000000},
+        "rincian_juli": {"AO": 20000000, "MO+": 20000000, "TERMIN": 0, "RO": 0,
+                         "SO": 0, "DO": -20000000, "MO-": 0, "ADJ": -60000000, "TOTAL": -40000000},
+        "kecukupan_agustus": {"est_rev_f3f4": 300000000, "est_rev_all": 5030000000},
+        "visit_agustus": {"visit_cm": 0, "target_cm": 16,
+                           "visit_ytd": 112, "target_ytd": 128},
         "list_cc": [
             {"cc": "Adaro Indonesia PT", "lop": "ADA LOP", "scal": "ADA SCALING"},
             {"cc": "Asian Agri Abadi Group", "lop": "ADA LOP", "scal": "ADA SCALING"},
@@ -227,22 +227,21 @@ AM_DETAIL_DEFAULT = {
         ],
     },
     "Rina Wulandari": {
-        "rev_h1": {"real": "14,80M", "ach": 128},
-        "lop_visit_h1": {"kecukupan_all_lop": 105, "jml_visit": 98, "target_visit": 96, "ach_visit": 102},
-        "scal_h1": {"scal_bc": "4,10M", "net_scaling": "3,05M"},
-        "rincian_h1": {"AO": "3,40M", "MO+": "0,25M", "TERMIN": "0,10M", "RO": "0,15M",
-                       "SO": "-0,02M", "DO": "-0,60M", "MO-": "-0,01M", "ADJ": "-0,22M", "TOTAL": "3,05M"},
+        "rev_h1": {"real": 14800000000, "ach": 128},
+        "lop_visit_h1": {"kecukupan_all_lop": 105, "jml_visit": 98, "target_visit": 96},
+        "scal_h1": {"scal_bc": 4100000000, "net_scaling": 3050000000},
+        "rincian_h1": {"AO": 3400000000, "MO+": 250000000, "TERMIN": 100000000, "RO": 150000000,
+                       "SO": -20000000, "DO": -600000000, "MO-": -10000000, "ADJ": -220000000, "TOTAL": 3050000000},
         "pacer_h1": {"result": 88, "process": 30, "total": 118, "kuadran": "KUADRAN 1"},
-        "kecukupan_lop_juli": {"target_scal_rkap": "2,10M", "kebutuhan_lop": "4,20M", "est_rev_lop": "6,05M", "ach": 144},
-        "visit_juli": {"target_cm": 16, "jml_visit_cm": 18, "ach_cm": 113,
-                       "target_ytd": 112, "jml_visit_ytd": 120, "ach_ytd": 107},
-        "scal_juli": {"scal_bc": "0,12M", "net_scaling": "0,08M"},
-        "rincian_juli": {"AO": "0,06M", "MO+": "0,03M", "TERMIN": "0,00M", "RO": "0,01M",
-                         "SO": "0,00M", "DO": "-0,01M", "MO-": "0,00M", "ADJ": "-0,01M", "TOTAL": "0,08M"},
-        "kecukupan_agustus": {"est_rev_f3f4": "0,55M", "ach_f3f4": 22, "gap_f3f4": "1,95M",
-                               "est_rev_all": "6,40M", "ach_all": 151, "gap_all": "-2,10M"},
-        "visit_agustus": {"visit_cm": 5, "target_cm": 16, "ach_cm": 31,
-                           "visit_ytd": 120, "target_ytd": 128, "ach_ytd": 94},
+        "kecukupan_lop_juli": {"target_scal_rkap": 2100000000, "kebutuhan_lop": 4200000000, "est_rev_lop": 6050000000},
+        "visit_juli": {"target_cm": 16, "jml_visit_cm": 18,
+                       "target_ytd": 112, "jml_visit_ytd": 120},
+        "scal_juli": {"scal_bc": 120000000, "net_scaling": 80000000},
+        "rincian_juli": {"AO": 60000000, "MO+": 30000000, "TERMIN": 0, "RO": 10000000,
+                         "SO": 0, "DO": -10000000, "MO-": 0, "ADJ": -10000000, "TOTAL": 80000000},
+        "kecukupan_agustus": {"est_rev_f3f4": 550000000, "est_rev_all": 6400000000},
+        "visit_agustus": {"visit_cm": 5, "target_cm": 16,
+                           "visit_ytd": 120, "target_ytd": 128},
         "list_cc": [
             {"cc": "Bank Mega Tbk", "lop": "ADA LOP", "scal": "ADA SCALING"},
             {"cc": "Sinar Mas Land", "lop": "ADA LOP", "scal": "ADA SCALING"},
@@ -250,22 +249,21 @@ AM_DETAIL_DEFAULT = {
         ],
     },
     "Bagus Santoso": {
-        "rev_h1": {"real": "9,10M", "ach": 89},
-        "lop_visit_h1": {"kecukupan_all_lop": 80, "jml_visit": 70, "target_visit": 96, "ach_visit": 73},
-        "scal_h1": {"scal_bc": "2,40M", "net_scaling": "1,05M"},
-        "rincian_h1": {"AO": "1,60M", "MO+": "0,05M", "TERMIN": "0,00M", "RO": "0,05M",
-                       "SO": "-0,05M", "DO": "-0,50M", "MO-": "-0,04M", "ADJ": "-0,06M", "TOTAL": "1,05M"},
+        "rev_h1": {"real": 9100000000, "ach": 89},
+        "lop_visit_h1": {"kecukupan_all_lop": 80, "jml_visit": 70, "target_visit": 96},
+        "scal_h1": {"scal_bc": 2400000000, "net_scaling": 1050000000},
+        "rincian_h1": {"AO": 1600000000, "MO+": 50000000, "TERMIN": 0, "RO": 50000000,
+                       "SO": -50000000, "DO": -500000000, "MO-": -40000000, "ADJ": -60000000, "TOTAL": 1050000000},
         "pacer_h1": {"result": 60, "process": 18, "total": 78, "kuadran": "KUADRAN 3"},
-        "kecukupan_lop_juli": {"target_scal_rkap": "1,40M", "kebutuhan_lop": "2,80M", "est_rev_lop": "3,10M", "ach": 111},
-        "visit_juli": {"target_cm": 16, "jml_visit_cm": 12, "ach_cm": 75,
-                       "target_ytd": 112, "jml_visit_ytd": 92, "ach_ytd": 82},
-        "scal_juli": {"scal_bc": "0,02M", "net_scaling": "-0,06M"},
-        "rincian_juli": {"AO": "0,01M", "MO+": "0,00M", "TERMIN": "0,00M", "RO": "0,00M",
-                         "SO": "0,00M", "DO": "-0,04M", "MO-": "0,00M", "ADJ": "-0,03M", "TOTAL": "-0,06M"},
-        "kecukupan_agustus": {"est_rev_f3f4": "0,15M", "ach_f3f4": 5, "gap_f3f4": "2,85M",
-                               "est_rev_all": "3,00M", "ach_all": 96, "gap_all": "0,10M"},
-        "visit_agustus": {"visit_cm": 0, "target_cm": 16, "ach_cm": 0,
-                           "visit_ytd": 92, "target_ytd": 128, "ach_ytd": 72},
+        "kecukupan_lop_juli": {"target_scal_rkap": 1400000000, "kebutuhan_lop": 2800000000, "est_rev_lop": 3100000000},
+        "visit_juli": {"target_cm": 16, "jml_visit_cm": 12,
+                       "target_ytd": 112, "jml_visit_ytd": 92},
+        "scal_juli": {"scal_bc": 20000000, "net_scaling": -60000000},
+        "rincian_juli": {"AO": 10000000, "MO+": 0, "TERMIN": 0, "RO": 0,
+                         "SO": 0, "DO": -40000000, "MO-": 0, "ADJ": -30000000, "TOTAL": -60000000},
+        "kecukupan_agustus": {"est_rev_f3f4": 150000000, "est_rev_all": 3000000000},
+        "visit_agustus": {"visit_cm": 0, "target_cm": 16,
+                           "visit_ytd": 92, "target_ytd": 128},
         "list_cc": [
             {"cc": "Pertamina Retail", "lop": "ADA LOP", "scal": "TANPA SCALING"},
             {"cc": "Krakatau Steel", "lop": "TANPA LOP", "scal": "TANPA SCALING"},
@@ -631,16 +629,20 @@ def _ach(v):
 
 
 def _parse_m(v):
-    """Ubah angka format 'X,XXM' (koma = desimal ala Indonesia) jadi float. '5,21M' -> 5.21 ; 88 -> 88.0"""
+    """Selalu mengembalikan angka RUPIAH PENUH (float).
+    Menerima angka penuh langsung (mis. 11240000000) — format baru & yang dianjurkan —
+    ATAU format lama 'X,XXM' ('5,21M' -> 5.21 miliar) supaya data lama tetap kompatibel."""
     if isinstance(v, (int, float)):
         return float(v)
-    s = str(v).strip().upper().replace("M", "").replace(",", ".")
-    return float(s) if s else 0.0
+    s = str(v).strip().upper()
+    if s.endswith("M"):
+        return float(s[:-1].replace(",", ".")) * 1_000_000_000
+    return float(s.replace(",", ".")) if s else 0.0
 
 
 def _fmt_m(v):
-    """5.21 -> '5,21M' — dipakai untuk menampilkan hasil hitungan dalam format yang sama dengan input."""
-    return f"{v:.2f}".replace(".", ",") + "M"
+    """11240000000 -> '11,24M' (M = Miliar Rupiah) — dipakai untuk menampilkan angka penuh dalam format ringkas."""
+    return f"{v/1_000_000_000:.2f}".replace(".", ",") + "M"
 
 
 def _row_ach(label, value_pct):
@@ -650,9 +652,15 @@ def _row_ach(label, value_pct):
     return f"<div class='am-row'><span>{label}</span><span class='am-badge {cls}'>{arrow} {value_pct:.0f}%</span></div>"
 
 
-def _row_gap(label, value_str):
-    """Baris GAP dengan badge merah mencolok (lower better -> selalu ditonjolkan sebagai perhatian)."""
-    return f"<div class='am-row'><span>{label}</span><span class='am-badge r'>{value_str}</span></div>"
+def _row_gap(label, raw_value, value_str):
+    """Badge GAP: minus (Est Rev sudah lebihi Kebutuhan LOP) = hijau, positif (masih kurang) = merah."""
+    cls = "g" if raw_value < 0 else "r"
+    return f"<div class='am-row'><span>{label}</span><span class='am-badge {cls}'>{value_str}</span></div>"
+
+
+def _row_pill(label, value_str, cls="n"):
+    """Baris dengan badge mencolok generik (bukan format persen) — untuk Kecukupan All LOP, Kuadran AM, dll."""
+    return f"<div class='am-row'><span>{label}</span><span class='am-badge {cls}'>{value_str}</span></div>"
 
 
 def _two_col_ach(l1, v1, l2, v2):
@@ -662,10 +670,10 @@ def _two_col_ach(l1, v1, l2, v2):
     </div>"""
 
 
-def _two_col_gap(l1, v1, l2, v2):
+def _two_col_gap(l1, raw1, str1, l2, raw2, str2):
     return f"""<div style="display:flex;">
-        <div style="flex:1;">{_row_gap(l1, v1)}</div>
-        <div style="flex:1;">{_row_gap(l2, v2)}</div>
+        <div style="flex:1;">{_row_gap(l1, raw1, str1)}</div>
+        <div style="flex:1;">{_row_gap(l2, raw2, str2)}</div>
     </div>"""
 
 
@@ -684,31 +692,34 @@ def render_am():
     # ---------------- LEFT: Performance H1 ----------------
     with col_l:
         st.markdown(_panel("REV H1", [(None,
-            _row("REAL", d["rev_h1"]["real"]) + _row_ach("ACH", d["rev_h1"]["ach"])
+            _row("REAL", _fmt_m(_parse_m(d["rev_h1"]["real"]))) + _row_ach("ACH", d["rev_h1"]["ach"])
         )]), unsafe_allow_html=True)
 
         lv = d["lop_visit_h1"]
         ach_visit = lv["jml_visit"] / lv["target_visit"] * 100 if lv["target_visit"] else 0  # RUMUS: Jml Visit / Target Visit
-        body = (_row("KECUKUPAN ALL LOP", f"{lv['kecukupan_all_lop']}%", _ach(lv["kecukupan_all_lop"]))
+        body = (_row_pill("KECUKUPAN ALL LOP", f"{lv['kecukupan_all_lop']}%", _ach(lv["kecukupan_all_lop"]))
                 + _row(f"JML VISIT (T. {lv['target_visit']} Visit)", lv["jml_visit"])
                 + _row_ach("ACH VISIT", ach_visit))
         st.markdown(_panel("LOP & VISIT H1", [(None, body)]), unsafe_allow_html=True)
 
         sc = d["scal_h1"]
-        body = _row("SCAL BC (AO, MO+, TERMIN, RO)", sc["scal_bc"]) + _row("NET SCALING", sc["net_scaling"])
+        body = (_row("SCAL BC (AO, MO+, TERMIN, RO)", _fmt_m(_parse_m(sc["scal_bc"])))
+                + _row("NET SCALING", _fmt_m(_parse_m(sc["net_scaling"]))))
         st.markdown(_panel("SCAL H1", [(None, body)], gold=True), unsafe_allow_html=True)
 
         rn = d["rincian_h1"]
-        body = ("".join(_row(k, rn[k], "g") for k in ["AO", "MO+", "TERMIN", "RO"])
-                + "".join(_row(k, rn[k], "r") for k in ["SO", "DO", "MO-", "ADJ"])
-                + _row("TOTAL", rn["TOTAL"], "total"))
+        body = ("".join(_row(k, _fmt_m(_parse_m(rn[k])), "g") for k in ["AO", "MO+", "TERMIN", "RO"])
+                + "".join(_row(k, _fmt_m(_parse_m(rn[k])), "r") for k in ["SO", "DO", "MO-", "ADJ"])
+                + _row("TOTAL", _fmt_m(_parse_m(rn["TOTAL"])), "total"))
         st.markdown(_panel("RINCIAN NET SCALING H1", [(None, body)], gold=True), unsafe_allow_html=True)
 
         pc = d["pacer_h1"]
-        body = (_row("TOTAL POIN RESULT", pc["result"], "g")
-                + _row("TOTAL POIN PROCESS", pc["process"], "r")
+        result_cls = "g" if pc["result"] >= 75 else "r"   # RULE: Merah < 75, Hijau >= 75
+        process_cls = "g" if pc["process"] >= 25 else "r"  # RULE: Merah < 25, Hijau >= 25
+        body = (_row("TOTAL POIN RESULT", pc["result"], result_cls)
+                + _row("TOTAL POIN PROCESS", pc["process"], process_cls)
                 + _row("TOTAL ALL", pc["total"], "total")
-                + _row("KUADRAN AM", pc["kuadran"], "total"))
+                + _row_pill("KUADRAN AM", pc["kuadran"], "n"))
         st.markdown(_panel("PACER H1", [(None, body)]), unsafe_allow_html=True)
 
     # ---------------- RIGHT: Juli & Agustus ----------------
@@ -719,9 +730,9 @@ def render_am():
             est_rev_lop = _parse_m(k["est_rev_lop"])
             kebutuhan_lop = _parse_m(k["kebutuhan_lop"])
             ach_lop = est_rev_lop / kebutuhan_lop * 100 if kebutuhan_lop else 0  # RUMUS: Est Rev LOP / Kebutuhan LOP
-            body1 = (_row("TARGET SCAL RKAP", k["target_scal_rkap"])
-                     + _row("KEBUTUHAN LOP (2X T.SCAL)", k["kebutuhan_lop"])
-                     + _row("EST REV LOP", k["est_rev_lop"])
+            body1 = (_row("TARGET SCAL RKAP", _fmt_m(_parse_m(k["target_scal_rkap"])))
+                     + _row("KEBUTUHAN LOP (2X T.SCAL)", _fmt_m(kebutuhan_lop))
+                     + _row("EST REV LOP", _fmt_m(est_rev_lop))
                      + _row_ach("ACH", ach_lop))
             v = d["visit_juli"]
             ach_cm = v["jml_visit_cm"] / v["target_cm"] * 100 if v["target_cm"] else 0      # RUMUS: Jml Visit CM / Target CM
@@ -738,11 +749,12 @@ def render_am():
 
         with r2:
             sj = d["scal_juli"]
-            body1 = _row("SCAL BC (AO, MO+, TERMIN, RO)", sj["scal_bc"]) + _row("NET SCALING", sj["net_scaling"])
+            body1 = (_row("SCAL BC (AO, MO+, TERMIN, RO)", _fmt_m(_parse_m(sj["scal_bc"])))
+                     + _row("NET SCALING", _fmt_m(_parse_m(sj["net_scaling"]))))
             rj = d["rincian_juli"]
-            body2 = ("".join(_row(k, rj[k], "g") for k in ["AO", "MO+", "TERMIN", "RO"])
-                     + "".join(_row(k, rj[k], "r") for k in ["SO", "DO", "MO-", "ADJ"])
-                     + _row("TOTAL", rj["TOTAL"], "total"))
+            body2 = ("".join(_row(k, _fmt_m(_parse_m(rj[k])), "g") for k in ["AO", "MO+", "TERMIN", "RO"])
+                     + "".join(_row(k, _fmt_m(_parse_m(rj[k])), "r") for k in ["SO", "DO", "MO-", "ADJ"])
+                     + _row("TOTAL", _fmt_m(_parse_m(rj["TOTAL"])), "total"))
             st.markdown(_panel("SCALING JULI 2026", [
                 ("SCAL JULI", body1), ("RINCIAN NET SCALING JULI", body2),
             ], gold=True), unsafe_allow_html=True)
@@ -757,9 +769,10 @@ def render_am():
             ach_all = est_rev_all / kebutuhan_lop * 100 if kebutuhan_lop else 0
             gap_f3f4 = kebutuhan_lop - est_rev_f3f4   # RUMUS: Kebutuhan LOP - Est Rev (Lower Better)
             gap_all = kebutuhan_lop - est_rev_all
-            body = (_two_col("EST REV LOP F3-F4", ka["est_rev_f3f4"], "", "EST REV ALL LOP", ka["est_rev_all"], "")
+            body = (_two_col("EST REV LOP F3-F4", _fmt_m(est_rev_f3f4), "", "EST REV ALL LOP", _fmt_m(est_rev_all), "")
                     + _two_col_ach("ACH", ach_f3f4, "ACH", ach_all)
-                    + _two_col_gap("GAP (Lower Better)", _fmt_m(gap_f3f4), "GAP (Lower Better)", _fmt_m(gap_all)))
+                    + _two_col_gap("GAP (Lower Better)", gap_f3f4, _fmt_m(gap_f3f4),
+                                    "GAP (Lower Better)", gap_all, _fmt_m(gap_all)))
             st.markdown(_panel("KECUKUPAN LOP AGUSTUS", [(None, body)]), unsafe_allow_html=True)
 
         with r4:
