@@ -231,7 +231,7 @@ def dummy_data():
 # ----------------------------------------------------------------------------
 AM_DETAIL_DEFAULT = {
     "Mar'atus Sholicha": {
-        "photo": "photo_maratus.jpg",
+        "photo": "photo_maratus.png",
         "period_ytd": "AGUSTUS 2026", "period_month": "SEPTEMBER", "cutoff_date": "19 September 2026",
         "real_rev": {
             "cm": {"target": 1730000000, "real": 1490000000},
