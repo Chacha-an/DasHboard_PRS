@@ -28,7 +28,7 @@ st.set_page_config(
 # THEME / CSS — mendukung mode Gelap & Terang, teal + glow tetap jadi ciri khasnya
 # ----------------------------------------------------------------------------
 if "theme" not in st.session_state:
-    st.session_state.theme = "dark"
+    st.session_state.theme = "light"
 
 THEMES = {
     "dark": {
@@ -111,9 +111,9 @@ div[data-testid="stMetric"]{{
 }}
 .am-panel{{ border:1px solid {BORDER}; border-radius:10px; overflow:hidden; margin-bottom:16px; background:{CARD}; }}
 .am-header{{ background:{CYAN}; color:{HEADER_TEXT}; font-weight:800; padding:9px 14px; text-align:center; font-size:12.5px; letter-spacing:0.4px;}}
-.am-header.gold{{ background:{GOLD}; }}
+.am-header.gold{{ background:{CYAN}; }}
 .am-subheader{{ background:{GLOW1}; color:{CYAN}; font-weight:700; padding:6px 14px; text-align:center; font-size:11.5px;}}
-.am-subheader.gold{{ background:{GLOW2}; color:{GOLD}; }}
+.am-subheader.gold{{ background:{GLOW1}; color:{CYAN}; }}
 .am-row{{ display:flex; justify-content:space-between; padding:7px 14px; font-size:12.5px; border-bottom:1px solid {ROWBORDER};}}
 .am-row span:first-child{{ color:{MUTED}; }}
 .am-row span:last-child{{ font-weight:700; color:{TEXT}; }}
@@ -137,7 +137,7 @@ div[data-testid="stMetric"]{{
 .am-badge.r{{ background:{RED}; color:#ffffff; box-shadow:0 0 12px {RED_GLOW}; }}
 .am-badge.n{{ background:{CYAN}; color:{HEADER_TEXT}; box-shadow:0 0 12px {GLOW1}; }}
 .am-bignum{{
-    display:inline-block; padding:4px 20px; border-radius:12px; font-weight:900; font-size:16px;
+    display:inline-block; padding:4px 20px; border-radius:12px; font-weight:900; font-size:22px;
 }}
 .am-bignum.g{{ background:{GREEN}; color:#ffffff; box-shadow:0 0 14px {GREEN_GLOW}; }}
 .am-bignum.r{{ background:{RED}; color:#ffffff; box-shadow:0 0 14px {RED_GLOW}; }}
@@ -156,11 +156,11 @@ div[data-testid="stMetric"]{{
 .am-stat .lbl{{ font-size:10px; font-weight:800; color:{MUTED}; text-transform:uppercase; letter-spacing:0.3px; margin-bottom:5px; }}
 .am-stat .val{{ font-size:22px; font-weight:900; color:{TEXT}; }}
 
-/* Sub-judul section — kotak solid + highlight, dipakai sebagai pemisah antar baris */
+/* Sub-judul section — kotak solid orange + highlight, dipakai sebagai pemisah antar baris */
 .am-section-title{{
-    background:{CYAN}; color:{HEADER_TEXT}; font-weight:900; font-size:14px; text-align:center;
+    background:{GOLD}; color:{HEADER_TEXT}; font-weight:900; font-size:14px; text-align:center;
     letter-spacing:0.6px; padding:11px 16px; border-radius:10px; margin:20px 0 12px;
-    box-shadow:0 0 16px {GLOW1};
+    box-shadow:0 0 16px {GLOW2};
 }}
 </style>
 """, unsafe_allow_html=True)
