@@ -123,6 +123,10 @@ div[data-testid="stMetric"]{{
 .am-row.r span:last-child{{ color:{RED}; }}
 .am-row.total{{ background:{TOTALBG}; font-weight:800; }}
 .am-row.total span{{ color:{TEXT}; }}
+.am-row.label{{ justify-content:center; }}
+.am-row.label span{{ width:100%; text-align:center; }}
+.am-row.label.hl{{ background:{CYAN}; }}
+.am-row.label.hl span{{ color:{HEADER_TEXT} !important; font-weight:800; letter-spacing:0.4px; }}
 
 /* Badge ACH & GAP — lebih mencolok dari baris biasa */
 .am-badge{{
@@ -766,6 +770,12 @@ def _row_pill(label, value_str, cls="n"):
     return f"<div class='am-row'><span>{label}</span><span class='am-badge {cls}'>{value_str}</span></div>"
 
 
+def _row_label(text, highlight=False):
+    """Baris label section (teks tunggal, di tengah) — dipakai sebagai pemisah/section title di dalam panel."""
+    cls = "label hl" if highlight else "label"
+    return f"<div class='am-row {cls}'><span>{text}</span></div>"
+
+
 def _two_col_ach(l1, v1, l2, v2):
     return f"""<div style="display:flex;">
         <div style="flex:1;">{_row_ach(l1, v1)}</div>
@@ -810,50 +820,61 @@ def render_am():
     names = list(data["am_detail"].keys())
     selected = st.selectbox("Pilih Account Manager", names, label_visibility="collapsed")
     d = data["am_detail"][selected]
+    month_ytd = d["period_ytd"].split()[0] if d.get("period_ytd") else ""
 
-    # ============== BARIS ATAS: Performance YTD | PACER | Foto+Nama ==============
-    col_perf, col_pacer, col_photo = st.columns([1.2, 1.7, 0.7])
+    # ============== BARIS 1: Foto+Nama | PACER Juli | PACER YTD Juli ==============
+    col_photo, col_pacer1, col_pacer2 = st.columns([0.8, 1, 1])
 
-    with col_perf:
-        st.markdown(f"##### PERFORMANCE YTD {d['period_ytd']}")
-        rr = d["real_rev"]
-        cm_ach = rr["cm"]["real"] / rr["cm"]["target"] * 100 if rr["cm"]["target"] else 0    # RUMUS: Real / Target
-        ytd_ach = rr["ytd"]["real"] / rr["ytd"]["target"] * 100 if rr["ytd"]["target"] else 0
-        body = (_row("CM Target", _fmt_m(rr["cm"]["target"])) + _row("CM Real (Incl IFRS)", _fmt_m(rr["cm"]["real"]))
+    with col_photo:
+        render_am_photo(d.get("photo"))
+        st.markdown(f"<div class='am-banner' style='font-size:14px; padding:12px; margin-top:12px;'>{selected.upper()}</div>",
+                    unsafe_allow_html=True)
+
+    with col_pacer1:
+        st.markdown(_pacer_card("PACER JULI", d["pacer_juli"]), unsafe_allow_html=True)
+
+    with col_pacer2:
+        st.markdown(_pacer_card("PACER YTD JULI", d["pacer_ytd"], gold=True), unsafe_allow_html=True)
+
+    # ============== BARIS 2: Real Rev | Detail Rev YTD | Real Scaling | Detail Net Scaling YTD ==============
+    st.markdown(f"##### PERFORMANCE YTD {d['period_ytd']}")
+    col_rr, col_drv, col_rs, col_dns = st.columns(4)
+
+    rr = d["real_rev"]
+    cm_ach = rr["cm"]["real"] / rr["cm"]["target"] * 100 if rr["cm"]["target"] else 0    # RUMUS: Real / Target
+    ytd_ach = rr["ytd"]["real"] / rr["ytd"]["target"] * 100 if rr["ytd"]["target"] else 0
+
+    with col_rr:
+        body = (_row_label(f"PERFORMANCE {month_ytd}", highlight=True)
+                + _row("CM Target", _fmt_m(rr["cm"]["target"])) + _row("CM Real (Incl IFRS)", _fmt_m(rr["cm"]["real"]))
                 + _row_ach("CM ACH", cm_ach)
+                + _row_label(f"PERFORMANCE YTD {month_ytd}", highlight=True)
                 + _row("YTD Target", _fmt_m(rr["ytd"]["target"])) + _row("YTD Real (Incl IFRS)", _fmt_m(rr["ytd"]["real"]))
                 + _row_ach("YTD ACH", ytd_ach)
                 + _row("NGTMA Real", _fmt_m(rr["ngtma"]["real"]))
                 + _row_pill("NGTMA ACH", f"{rr['ngtma']['ach']}%", _ach(rr["ngtma"]["ach"])))
         st.markdown(_panel("REAL REV", [(None, body)]), unsafe_allow_html=True)
 
+    with col_drv:
         det = rr["detail"]
         body2 = (_row("NON POTS", _fmt_m(det["non_pots"])) + _row("POTS", _fmt_m(det["pots"]))
                  + _row("IFRS", _fmt_m(det["ifrs"])) + _row("TOTAL", _fmt_m(det["total"]), "total"))
         st.markdown(_panel("DETAIL REVENUE YTD", [(None, body2)], gold=True), unsafe_allow_html=True)
 
+    with col_rs:
         rs = d["real_scaling"]
-        body3 = (_row("CM Scal BC", _fmt_m(rs["cm"]["scal_bc"])) + _row("CM Net Scaling", _fmt_m(rs["cm"]["net_scaling"]))
+        body3 = (_row_label(f"PERFORMANCE {month_ytd}")
+                 + _row("CM Scal BC", _fmt_m(rs["cm"]["scal_bc"])) + _row("CM Net Scaling", _fmt_m(rs["cm"]["net_scaling"]))
+                 + _row_label(f"PERFORMANCE YTD {month_ytd}")
                  + _row("YTD Scal BC", _fmt_m(rs["ytd"]["scal_bc"])) + _row("YTD Net Scaling", _fmt_m(rs["ytd"]["net_scaling"])))
         st.markdown(_panel("REAL SCALING", [(None, body3)]), unsafe_allow_html=True)
 
+    with col_dns:
         dn = rs["detail"]
         body4 = ("".join(_row(k, _fmt_m(dn[k]), "g") for k in ["AO", "MO+", "TERMIN", "RO"])
                  + "".join(_row(k, _fmt_m(dn[k]), "r") for k in ["SO", "DO", "MO-", "ADJ"])
                  + _row("TOTAL", _fmt_m(dn["TOTAL"]), "total"))
         st.markdown(_panel("DETAIL NET SCALING YTD", [(None, body4)], gold=True), unsafe_allow_html=True)
-
-    with col_pacer:
-        pc1, pc2 = st.columns(2)
-        with pc1:
-            st.markdown(_pacer_card("PACER JULI", d["pacer_juli"]), unsafe_allow_html=True)
-        with pc2:
-            st.markdown(_pacer_card("PACER YTD JULI", d["pacer_ytd"], gold=True), unsafe_allow_html=True)
-
-    with col_photo:
-        render_am_photo(d.get("photo"))
-        st.markdown(f"<div class='am-banner' style='font-size:14px; padding:12px; margin-top:12px;'>{selected.upper()}</div>",
-                    unsafe_allow_html=True)
 
     # ============== BARIS BAWAH: Kecukupan LOP & Visit | List CC | List LOP ==============
     col_lop, col_cc, col_lobtable = st.columns([1, 1.3, 1.3])
