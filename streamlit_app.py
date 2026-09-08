@@ -132,6 +132,17 @@ div[data-testid="stMetric"]{{
 .am-badge.g{{ background:{GREEN}; color:#ffffff; box-shadow:0 0 12px {GREEN_GLOW}; }}
 .am-badge.r{{ background:{RED}; color:#ffffff; box-shadow:0 0 12px {RED_GLOW}; }}
 .am-badge.n{{ background:{CYAN}; color:{HEADER_TEXT}; box-shadow:0 0 12px {GLOW1}; }}
+.am-bignum{{
+    display:inline-block; padding:4px 20px; border-radius:12px; font-weight:900; font-size:22px;
+}}
+.am-bignum.g{{ background:{GREEN}; color:#ffffff; box-shadow:0 0 14px {GREEN_GLOW}; }}
+.am-bignum.r{{ background:{RED}; color:#ffffff; box-shadow:0 0 14px {RED_GLOW}; }}
+.am-photo-frame{{
+    width:100%; aspect-ratio:3/4; border-radius:16px; overflow:hidden;
+    border:1px solid {BORDER}; box-shadow:0 0 20px {GLOW1}; background:{CARD};
+    display:flex; align-items:center; justify-content:center;
+}}
+.am-photo-frame img{{ width:100%; height:100%; object-fit:cover; }}
 </style>
 """, unsafe_allow_html=True)
 
@@ -200,73 +211,117 @@ def dummy_data():
 # Untuk tambah AM lain, copy salah satu blok ini dan ganti angkanya.
 # ----------------------------------------------------------------------------
 AM_DETAIL_DEFAULT = {
-    "Mochamad Faroq": {
-        "rev_h1": {"real": 11240000000, "ach": 111},
-        "lop_visit_h1": {"kecukupan_all_lop": 97, "jml_visit": 88, "target_visit": 96},
-        "scal_h1": {"scal_bc": 3380000000, "net_scaling": 2270000000},
-        "rincian_h1": {"AO": 3080000000, "MO+": 100000000, "TERMIN": 0, "RO": 200000000,
-                       "SO": -30000000, "DO": -950000000, "MO-": -30000000, "ADJ": -100000000, "TOTAL": 2270000000},
-        "pacer_h1": {"result": 75, "process": 24, "total": 99, "kuadran": "KUADRAN 2"},
-        "kecukupan_lop_juli": {"target_scal_rkap": 1870000000, "kebutuhan_lop": 3740000000, "est_rev_lop": 5210000000},
-        "visit_juli": {"target_cm": 16, "jml_visit_cm": 24,
-                       "target_ytd": 112, "jml_visit_ytd": 112},
-        "scal_juli": {"scal_bc": 40000000, "net_scaling": -40000000},
-        "rincian_juli": {"AO": 20000000, "MO+": 20000000, "TERMIN": 0, "RO": 0,
-                         "SO": 0, "DO": -20000000, "MO-": 0, "ADJ": -60000000, "TOTAL": -40000000},
-        "kecukupan_agustus": {"est_rev_f3f4": 300000000, "est_rev_all": 5030000000},
-        "visit_agustus": {"visit_cm": 0, "target_cm": 16,
-                           "visit_ytd": 112, "target_ytd": 128},
+    "Mar'atus Sholicha": {
+        "photo": "photo_maratus.jpg",
+        "period_ytd": "AGUSTUS 2026", "period_month": "SEPTEMBER", "cutoff_date": "19 September 2026",
+        "real_rev": {
+            "cm": {"target": 1730000000, "real": 1490000000},
+            "ytd": {"target": 13480000000, "real": 11790000000},
+            "ngtma": {"real": 10000000, "ach": 1},
+            "detail": {"non_pots": 7480000000, "pots": 3210000000, "ifrs": -390000000, "total": 10300000000},
+        },
+        "real_scaling": {
+            "cm": {"scal_bc": 10000000, "net_scaling": 0},
+            "ytd": {"scal_bc": 800000000, "net_scaling": 200000000},
+            "detail": {"AO": 340000000, "MO+": 440000000, "TERMIN": 0, "RO": 20000000,
+                       "SO": -20000000, "DO": -60000000, "MO-": -20000000, "ADJ": -510000000, "TOTAL": 200000000},
+        },
+        "pacer_juli": {"result": 70, "ach_revenue": 86, "ach_scaling": 64, "win_rate": 160, "kecukupan_qualified": 42,
+                       "process": 33, "kec_lop": 228, "jml_visit": 17, "target_visit": 16,
+                       "total_pacer": 103, "kuadran": "KUADRAN 3"},
+        "pacer_ytd": {"result": 62, "ach_revenue": 91, "ach_scaling": 25, "win_rate": 160, "kecukupan_qualified": 42,
+                      "process": 34, "kec_lop": 228, "jml_visit": 110, "target_visit": 96,
+                      "total_pacer": 96, "kuadran": "KUADRAN 3"},
+        "kecukupan_lop": {"target": 4860000000, "est_rev_f3f4": 760000000, "est_rev_all": 15270000000},
+        "visit_bulan": {"cm": {"jml_visit": 7, "target": 16}, "ytd": {"jml_visit": 154, "target": 128}},
+        "cc_summary": {"jml_cc": 9, "jml_cc_tanpa_lop": 2, "jml_cc_tanpa_scal": 3},
         "list_cc": [
-            {"cc": "Adaro Indonesia PT", "lop": "ADA LOP", "scal": "ADA SCALING"},
-            {"cc": "Asian Agri Abadi Group", "lop": "ADA LOP", "scal": "ADA SCALING"},
-            {"cc": "Nusa Halmahera Mineral PT", "lop": "ADA LOP", "scal": "ADA SCALING"},
-            {"cc": "Riau Andalan Pulp & Paper", "lop": "ADA LOP", "scal": "ADA SCALING"},
-            {"cc": "Royal Golden Eagle Indonesia", "lop": "ADA LOP", "scal": "ADA SCALING"},
-            {"cc": "PT Kalimantan Industrial Park Indonesia", "lop": "ADA LOP", "scal": "TANPA SCALING"},
-            {"cc": "Saptaindra Sejati", "lop": "ADA LOP", "scal": "TANPA SCALING"},
+            {"cc": "PT Bara Tabang", "jml_lop": "1 LOP", "jml_scal": "TIDAK ADA SCALING"},
+            {"cc": "Podomoro Group", "jml_lop": "10 LOP", "jml_scal": "0,16 M"},
+            {"cc": "Donggi Senoro LNG", "jml_lop": "14 LOP", "jml_scal": "0,11 M"},
+            {"cc": "Cifor", "jml_lop": "3 LOP", "jml_scal": "0 M"},
+            {"cc": "Roheda Sejati / Plaza Oleos", "jml_lop": "3 LOP", "jml_scal": "TIDAK ADA SCALING"},
+            {"cc": "Bayan Resources", "jml_lop": "7 LOP", "jml_scal": "0,01 M"},
+            {"cc": "Artha Telekomindo", "jml_lop": "76 LOP", "jml_scal": "0,1 M"},
+            {"cc": "Orica", "jml_lop": "TIDAK ADA LOP", "jml_scal": "0,83 M"},
+            {"cc": "Permata Senayan (Arthatel)", "jml_lop": "TIDAK ADA LOP", "jml_scal": "TIDAK ADA SCALING"},
+        ],
+        "lob_summary": {"jml_lob": 6, "est_nilai_bc": 0.0320591},
+        "list_lop": [
+            {"lop_id": "P26-200854", "proj": "APL - PT GPS Astinet dan Indibiz", "est_bc": 0.0045, "ket_lob": "NEW LOB"},
+            {"lop_id": "P26-204525", "proj": "PSB Metro P2MP 200 Mbps PT LSAG Cable Indonesia, Artha Industrial Hill Blok E Kav 20-21", "est_bc": 0.010095, "ket_lob": "NEW LOB"},
+            {"lop_id": "P26-204355", "proj": "PSB Astinet Fit 50 Mbps PT. MAP ZONA ADIPERKASA (DIGIPLUS) Bassura City Mall, Jl. Jend", "est_bc": 0.00491, "ket_lob": "NEW LOB"},
+            {"lop_id": "P26-204145", "proj": "PSB Metro P2MP 5 Mbps PT. Toray Industries Indonesia Cab Semarang, Jl. Raya Tegalpana", "est_bc": 0.00484, "ket_lob": "NEW LOB"},
+            {"lop_id": "P26-203327", "proj": "PSB Astinet Dedicated 30 Mbps Erablue Electronic 8 Lokasi (2 Quote) Blok 001 Sawah Kali", "est_bc": 0.0047141, "ket_lob": "CO Aug"},
+            {"lop_id": "P26-203556", "proj": "PSB Astinet Fit 50 Mbps PT. MAP ZONA ADIPERKASA (DIGIMAP) Ponorogo City Center, Jl.", "est_bc": 0.003, "ket_lob": "NEW LOB"},
         ],
     },
     "Rina Wulandari": {
-        "rev_h1": {"real": 14800000000, "ach": 128},
-        "lop_visit_h1": {"kecukupan_all_lop": 105, "jml_visit": 98, "target_visit": 96},
-        "scal_h1": {"scal_bc": 4100000000, "net_scaling": 3050000000},
-        "rincian_h1": {"AO": 3400000000, "MO+": 250000000, "TERMIN": 100000000, "RO": 150000000,
-                       "SO": -20000000, "DO": -600000000, "MO-": -10000000, "ADJ": -220000000, "TOTAL": 3050000000},
-        "pacer_h1": {"result": 88, "process": 30, "total": 118, "kuadran": "KUADRAN 1"},
-        "kecukupan_lop_juli": {"target_scal_rkap": 2100000000, "kebutuhan_lop": 4200000000, "est_rev_lop": 6050000000},
-        "visit_juli": {"target_cm": 16, "jml_visit_cm": 18,
-                       "target_ytd": 112, "jml_visit_ytd": 120},
-        "scal_juli": {"scal_bc": 120000000, "net_scaling": 80000000},
-        "rincian_juli": {"AO": 60000000, "MO+": 30000000, "TERMIN": 0, "RO": 10000000,
-                         "SO": 0, "DO": -10000000, "MO-": 0, "ADJ": -10000000, "TOTAL": 80000000},
-        "kecukupan_agustus": {"est_rev_f3f4": 550000000, "est_rev_all": 6400000000},
-        "visit_agustus": {"visit_cm": 5, "target_cm": 16,
-                           "visit_ytd": 120, "target_ytd": 128},
+        "photo": "photo_rina.jpg",
+        "period_ytd": "AGUSTUS 2026", "period_month": "SEPTEMBER", "cutoff_date": "19 September 2026",
+        "real_rev": {
+            "cm": {"target": 1900000000, "real": 2050000000},
+            "ytd": {"target": 15200000000, "real": 16800000000},
+            "ngtma": {"real": 30000000, "ach": 3},
+            "detail": {"non_pots": 9600000000, "pots": 5100000000, "ifrs": 2100000000, "total": 16800000000},
+        },
+        "real_scaling": {
+            "cm": {"scal_bc": 50000000, "net_scaling": 40000000},
+            "ytd": {"scal_bc": 1200000000, "net_scaling": 950000000},
+            "detail": {"AO": 600000000, "MO+": 300000000, "TERMIN": 50000000, "RO": 60000000,
+                       "SO": -10000000, "DO": -30000000, "MO-": -10000000, "ADJ": -10000000, "TOTAL": 950000000},
+        },
+        "pacer_juli": {"result": 92, "ach_revenue": 108, "ach_scaling": 95, "win_rate": 175, "kecukupan_qualified": 60,
+                       "process": 55, "kec_lop": 260, "jml_visit": 19, "target_visit": 16,
+                       "total_pacer": 147, "kuadran": "KUADRAN 1"},
+        "pacer_ytd": {"result": 96, "ach_revenue": 111, "ach_scaling": 79, "win_rate": 170, "kecukupan_qualified": 58,
+                      "process": 60, "kec_lop": 250, "jml_visit": 130, "target_visit": 96,
+                      "total_pacer": 156, "kuadran": "KUADRAN 1"},
+        "kecukupan_lop": {"target": 5200000000, "est_rev_f3f4": 2100000000, "est_rev_all": 19800000000},
+        "visit_bulan": {"cm": {"jml_visit": 18, "target": 16}, "ytd": {"jml_visit": 138, "target": 128}},
+        "cc_summary": {"jml_cc": 12, "jml_cc_tanpa_lop": 1, "jml_cc_tanpa_scal": 2},
         "list_cc": [
-            {"cc": "Bank Mega Tbk", "lop": "ADA LOP", "scal": "ADA SCALING"},
-            {"cc": "Sinar Mas Land", "lop": "ADA LOP", "scal": "ADA SCALING"},
-            {"cc": "Summarecon Agung", "lop": "ADA LOP", "scal": "TANPA SCALING"},
+            {"cc": "Bank Mega Tbk", "jml_lop": "6 LOP", "jml_scal": "0,45 M"},
+            {"cc": "Sinar Mas Land", "jml_lop": "9 LOP", "jml_scal": "0,30 M"},
+            {"cc": "Summarecon Agung", "jml_lop": "4 LOP", "jml_scal": "TIDAK ADA SCALING"},
+        ],
+        "lob_summary": {"jml_lob": 9, "est_nilai_bc": 0.0541200},
+        "list_lop": [
+            {"lop_id": "P26-210044", "proj": "APL - PT Bank Mega Cabang Sudirman", "est_bc": 0.0061, "ket_lob": "NEW LOB"},
+            {"lop_id": "P26-211320", "proj": "PSB Metro P2MP 500 Mbps Sinar Mas Land Plaza BSD", "est_bc": 0.0125, "ket_lob": "NEW LOB"},
         ],
     },
     "Bagus Santoso": {
-        "rev_h1": {"real": 9100000000, "ach": 89},
-        "lop_visit_h1": {"kecukupan_all_lop": 80, "jml_visit": 70, "target_visit": 96},
-        "scal_h1": {"scal_bc": 2400000000, "net_scaling": 1050000000},
-        "rincian_h1": {"AO": 1600000000, "MO+": 50000000, "TERMIN": 0, "RO": 50000000,
-                       "SO": -50000000, "DO": -500000000, "MO-": -40000000, "ADJ": -60000000, "TOTAL": 1050000000},
-        "pacer_h1": {"result": 60, "process": 18, "total": 78, "kuadran": "KUADRAN 3"},
-        "kecukupan_lop_juli": {"target_scal_rkap": 1400000000, "kebutuhan_lop": 2800000000, "est_rev_lop": 3100000000},
-        "visit_juli": {"target_cm": 16, "jml_visit_cm": 12,
-                       "target_ytd": 112, "jml_visit_ytd": 92},
-        "scal_juli": {"scal_bc": 20000000, "net_scaling": -60000000},
-        "rincian_juli": {"AO": 10000000, "MO+": 0, "TERMIN": 0, "RO": 0,
-                         "SO": 0, "DO": -40000000, "MO-": 0, "ADJ": -30000000, "TOTAL": -60000000},
-        "kecukupan_agustus": {"est_rev_f3f4": 150000000, "est_rev_all": 3000000000},
-        "visit_agustus": {"visit_cm": 0, "target_cm": 16,
-                           "visit_ytd": 92, "target_ytd": 128},
+        "photo": "photo_bagus.jpg",
+        "period_ytd": "AGUSTUS 2026", "period_month": "SEPTEMBER", "cutoff_date": "19 September 2026",
+        "real_rev": {
+            "cm": {"target": 1200000000, "real": 780000000},
+            "ytd": {"target": 9600000000, "real": 6700000000},
+            "ngtma": {"real": 0, "ach": 0},
+            "detail": {"non_pots": 4800000000, "pots": 2400000000, "ifrs": -500000000, "total": 6700000000},
+        },
+        "real_scaling": {
+            "cm": {"scal_bc": 5000000, "net_scaling": -5000000},
+            "ytd": {"scal_bc": 300000000, "net_scaling": 60000000},
+            "detail": {"AO": 120000000, "MO+": 40000000, "TERMIN": 0, "RO": 10000000,
+                       "SO": -20000000, "DO": -60000000, "MO-": -10000000, "ADJ": -20000000, "TOTAL": 60000000},
+        },
+        "pacer_juli": {"result": 48, "ach_revenue": 65, "ach_scaling": 40, "win_rate": 120, "kecukupan_qualified": 25,
+                       "process": 20, "kec_lop": 150, "jml_visit": 10, "target_visit": 16,
+                       "total_pacer": 68, "kuadran": "KUADRAN 4"},
+        "pacer_ytd": {"result": 52, "ach_revenue": 70, "ach_scaling": 20, "win_rate": 130, "kecukupan_qualified": 30,
+                      "process": 22, "kec_lop": 140, "jml_visit": 78, "target_visit": 96,
+                      "total_pacer": 74, "kuadran": "KUADRAN 4"},
+        "kecukupan_lop": {"target": 3400000000, "est_rev_f3f4": 200000000, "est_rev_all": 2900000000},
+        "visit_bulan": {"cm": {"jml_visit": 4, "target": 16}, "ytd": {"jml_visit": 78, "target": 128}},
+        "cc_summary": {"jml_cc": 5, "jml_cc_tanpa_lop": 2, "jml_cc_tanpa_scal": 3},
         "list_cc": [
-            {"cc": "Pertamina Retail", "lop": "ADA LOP", "scal": "TANPA SCALING"},
-            {"cc": "Krakatau Steel", "lop": "TANPA LOP", "scal": "TANPA SCALING"},
+            {"cc": "Pertamina Retail", "jml_lop": "2 LOP", "jml_scal": "TIDAK ADA SCALING"},
+            {"cc": "Krakatau Steel", "jml_lop": "TIDAK ADA LOP", "jml_scal": "TIDAK ADA SCALING"},
+        ],
+        "lob_summary": {"jml_lob": 2, "est_nilai_bc": 0.0089000},
+        "list_lop": [
+            {"lop_id": "P26-198740", "proj": "PSB Astinet Fit 20 Mbps Pertamina Retail SPBU Cilandak", "est_bc": 0.0035, "ket_lob": "NEW LOB"},
         ],
     },
 }
@@ -281,91 +336,119 @@ SHEET_MAP = {
     "Action_Plan": "action",
 }
 
-# 4 sheet Excel khusus untuk detail scorecard AM Performance (satu paket, dibaca bersamaan)
-AM_DETAIL_SHEETS = ["AM_Scorecard_H1", "AM_Scorecard_Juli", "AM_Scorecard_Agustus", "AM_List_CC"]
+# 7 sheet Excel khusus untuk detail scorecard AM Performance (satu paket, dibaca bersamaan)
+AM_DETAIL_SHEETS = ["AM_Summary", "AM_RealRev_Scaling", "AM_Pacer", "AM_Kecukupan_LOP_Visit",
+                    "AM_List_CC", "AM_List_LOP"]
 
 
 def am_detail_to_sheets(am_detail):
-    """dict AM_DETAIL -> 4 DataFrame (untuk didownload sebagai template).
-    Kolom ACH & GAP TIDAK disertakan -> sudah dihitung otomatis oleh sistem, tidak perlu diisi manual."""
-    h1_rows, juli_rows, agustus_rows, cc_rows = [], [], [], []
+    """dict AM_DETAIL -> 6 DataFrame (untuk didownload sebagai template).
+    ACH & GAP TIDAK disertakan -> dihitung otomatis, tidak perlu diisi manual."""
+    summary_rows, rev_rows, pacer_rows, lop_rows, cc_rows, lop_id_rows = [], [], [], [], [], []
     for name, d in am_detail.items():
-        h1_rows.append({
-            "Name": name, "Real": d["rev_h1"]["real"], "ACH": d["rev_h1"]["ach"],  # ACH di sini masih manual (lihat catatan di app)
-            "KecukupanAllLOP": d["lop_visit_h1"]["kecukupan_all_lop"],
-            "TargetVisit": d["lop_visit_h1"]["target_visit"], "JmlVisit": d["lop_visit_h1"]["jml_visit"],
-            "ScalBC": d["scal_h1"]["scal_bc"], "NetScaling": d["scal_h1"]["net_scaling"],
-            "AO": d["rincian_h1"]["AO"], "MOPlus": d["rincian_h1"]["MO+"], "TERMIN": d["rincian_h1"]["TERMIN"],
-            "RO": d["rincian_h1"]["RO"], "SO": d["rincian_h1"]["SO"], "DO": d["rincian_h1"]["DO"],
-            "MOMinus": d["rincian_h1"]["MO-"], "ADJ": d["rincian_h1"]["ADJ"], "TOTAL": d["rincian_h1"]["TOTAL"],
-            "PacerResult": d["pacer_h1"]["result"], "PacerProcess": d["pacer_h1"]["process"],
-            "PacerTotal": d["pacer_h1"]["total"], "Kuadran": d["pacer_h1"]["kuadran"],
+        cs, lb = d["cc_summary"], d["lob_summary"]
+        summary_rows.append({
+            "Name": name, "PhotoFile": d.get("photo", ""),
+            "PeriodYTD": d["period_ytd"], "PeriodMonth": d["period_month"], "CutoffDate": d["cutoff_date"],
+            "JmlCC": cs["jml_cc"], "JmlCCTanpaLOP": cs["jml_cc_tanpa_lop"], "JmlCCTanpaScal": cs["jml_cc_tanpa_scal"],
+            "JmlLOB": lb["jml_lob"], "EstNilaiBC": lb["est_nilai_bc"],
         })
-        juli_rows.append({
+        rr, rs = d["real_rev"], d["real_scaling"]
+        rev_rows.append({
             "Name": name,
-            "TargetScalRKAP": d["kecukupan_lop_juli"]["target_scal_rkap"],
-            "KebutuhanLOP": d["kecukupan_lop_juli"]["kebutuhan_lop"],
-            "EstRevLOP": d["kecukupan_lop_juli"]["est_rev_lop"],
-            "TargetCM": d["visit_juli"]["target_cm"], "JmlVisitCM": d["visit_juli"]["jml_visit_cm"],
-            "TargetYTD": d["visit_juli"]["target_ytd"], "JmlVisitYTD": d["visit_juli"]["jml_visit_ytd"],
-            "ScalBC": d["scal_juli"]["scal_bc"], "NetScaling": d["scal_juli"]["net_scaling"],
-            "AO": d["rincian_juli"]["AO"], "MOPlus": d["rincian_juli"]["MO+"], "TERMIN": d["rincian_juli"]["TERMIN"],
-            "RO": d["rincian_juli"]["RO"], "SO": d["rincian_juli"]["SO"], "DO": d["rincian_juli"]["DO"],
-            "MOMinus": d["rincian_juli"]["MO-"], "ADJ": d["rincian_juli"]["ADJ"], "TOTAL": d["rincian_juli"]["TOTAL"],
+            "RevCMTarget": rr["cm"]["target"], "RevCMReal": rr["cm"]["real"],
+            "RevYTDTarget": rr["ytd"]["target"], "RevYTDReal": rr["ytd"]["real"],
+            "NGTMAReal": rr["ngtma"]["real"], "NGTMAAch": rr["ngtma"]["ach"],
+            "NonPOTS": rr["detail"]["non_pots"], "POTS": rr["detail"]["pots"],
+            "IFRS": rr["detail"]["ifrs"], "RevTotal": rr["detail"]["total"],
+            "ScalCMBC": rs["cm"]["scal_bc"], "ScalCMNet": rs["cm"]["net_scaling"],
+            "ScalYTDBC": rs["ytd"]["scal_bc"], "ScalYTDNet": rs["ytd"]["net_scaling"],
+            "AO": rs["detail"]["AO"], "MOPlus": rs["detail"]["MO+"], "TERMIN": rs["detail"]["TERMIN"],
+            "RO": rs["detail"]["RO"], "SO": rs["detail"]["SO"], "DO": rs["detail"]["DO"],
+            "MOMinus": rs["detail"]["MO-"], "ADJ": rs["detail"]["ADJ"], "ScalTOTAL": rs["detail"]["TOTAL"],
         })
-        agustus_rows.append({
-            "Name": name,
-            "EstRevF3F4": d["kecukupan_agustus"]["est_rev_f3f4"], "EstRevAll": d["kecukupan_agustus"]["est_rev_all"],
-            "VisitCM": d["visit_agustus"]["visit_cm"], "TargetCM": d["visit_agustus"]["target_cm"],
-            "VisitYTD": d["visit_agustus"]["visit_ytd"], "TargetYTD": d["visit_agustus"]["target_ytd"],
+        for period_label, p in [("Juli", d["pacer_juli"]), ("YTD Juli", d["pacer_ytd"])]:
+            pacer_rows.append({
+                "Name": name, "Period": period_label, "Result": p["result"],
+                "AchRevenue": p["ach_revenue"], "AchScaling": p["ach_scaling"], "WinRate": p["win_rate"],
+                "KecukupanQualified": p["kecukupan_qualified"], "Process": p["process"], "KecLOP": p["kec_lop"],
+                "JmlVisit": p["jml_visit"], "TargetVisit": p["target_visit"],
+                "TotalPacer": p["total_pacer"], "Kuadran": p["kuadran"],
+            })
+        kl, vb = d["kecukupan_lop"], d["visit_bulan"]
+        lop_rows.append({
+            "Name": name, "TargetKecLOP": kl["target"], "EstRevF3F4": kl["est_rev_f3f4"], "EstRevAll": kl["est_rev_all"],
+            "VisitCMJml": vb["cm"]["jml_visit"], "VisitCMTarget": vb["cm"]["target"],
+            "VisitYTDJml": vb["ytd"]["jml_visit"], "VisitYTDTarget": vb["ytd"]["target"],
         })
         for c in d["list_cc"]:
-            cc_rows.append({"Name": name, "CC": c["cc"], "KetLOP": c["lop"], "KetScal": c["scal"]})
-    return (pd.DataFrame(h1_rows), pd.DataFrame(juli_rows), pd.DataFrame(agustus_rows), pd.DataFrame(cc_rows))
+            cc_rows.append({"Name": name, "CC": c["cc"], "JmlLOP": c["jml_lop"], "JmlScalBC": c["jml_scal"]})
+        for l in d["list_lop"]:
+            lop_id_rows.append({"Name": name, "LopID": l["lop_id"], "Proj": l["proj"],
+                                 "EstBC": l["est_bc"], "KetLOB": l["ket_lob"]})
+    return (pd.DataFrame(summary_rows), pd.DataFrame(rev_rows), pd.DataFrame(pacer_rows),
+            pd.DataFrame(lop_rows), pd.DataFrame(cc_rows), pd.DataFrame(lop_id_rows))
 
 
 def build_am_detail_from_sheets(sheets):
-    """4 sheet Excel -> dict AM_DETAIL. Return None kalau sheet-nya tidak lengkap (fallback ke default).
+    """6 sheet Excel -> dict AM_DETAIL. Return None kalau sheet-nya tidak lengkap (fallback ke default).
     ACH & GAP dihitung otomatis di halaman AM Performance, jadi TIDAK dibaca dari sini."""
     if not all(n in sheets and not sheets[n].empty for n in AM_DETAIL_SHEETS):
         return None
-    h1 = sheets["AM_Scorecard_H1"].set_index("Name")
-    juli = sheets["AM_Scorecard_Juli"].set_index("Name")
-    agustus = sheets["AM_Scorecard_Agustus"].set_index("Name")
+    summary = sheets["AM_Summary"].set_index("Name")
+    rev = sheets["AM_RealRev_Scaling"].set_index("Name")
+    pacer = sheets["AM_Pacer"]
+    lop = sheets["AM_Kecukupan_LOP_Visit"].set_index("Name")
     cc = sheets["AM_List_CC"]
+    lop_id = sheets["AM_List_LOP"]
 
     result = {}
-    for name in h1.index:
-        r = h1.loc[name]
-        j = juli.loc[name] if name in juli.index else None
-        a = agustus.loc[name] if name in agustus.index else None
+    for name in summary.index:
+        s = summary.loc[name]
+        r = rev.loc[name] if name in rev.index else None
+        l = lop.loc[name] if name in lop.index else None
+        p_rows = pacer[pacer["Name"] == name]
+        p_juli = p_rows[p_rows["Period"] == "Juli"]
+        p_ytd = p_rows[p_rows["Period"] == "YTD Juli"]
+
+        def _pacer_dict(row):
+            return {"result": row["Result"], "ach_revenue": row["AchRevenue"], "ach_scaling": row["AchScaling"],
+                    "win_rate": row["WinRate"], "kecukupan_qualified": row["KecukupanQualified"],
+                    "process": row["Process"], "kec_lop": row["KecLOP"], "jml_visit": row["JmlVisit"],
+                    "target_visit": row["TargetVisit"], "total_pacer": row["TotalPacer"], "kuadran": row["Kuadran"]}
+
         cc_rows = cc[cc["Name"] == name]
+        lop_id_rows = lop_id[lop_id["Name"] == name]
+
         result[name] = {
-            "rev_h1": {"real": r["Real"], "ach": r["ACH"]},
-            "lop_visit_h1": {"kecukupan_all_lop": r["KecukupanAllLOP"],
-                              "jml_visit": r["JmlVisit"], "target_visit": r["TargetVisit"]},
-            "scal_h1": {"scal_bc": r["ScalBC"], "net_scaling": r["NetScaling"]},
-            "rincian_h1": {"AO": r["AO"], "MO+": r["MOPlus"], "TERMIN": r["TERMIN"], "RO": r["RO"],
-                           "SO": r["SO"], "DO": r["DO"], "MO-": r["MOMinus"], "ADJ": r["ADJ"], "TOTAL": r["TOTAL"]},
-            "pacer_h1": {"result": r["PacerResult"], "process": r["PacerProcess"],
-                         "total": r["PacerTotal"], "kuadran": r["Kuadran"]},
-            "kecukupan_lop_juli": ({} if j is None else {
-                "target_scal_rkap": j["TargetScalRKAP"], "kebutuhan_lop": j["KebutuhanLOP"],
-                "est_rev_lop": j["EstRevLOP"]}),
-            "visit_juli": ({} if j is None else {
-                "target_cm": j["TargetCM"], "jml_visit_cm": j["JmlVisitCM"],
-                "target_ytd": j["TargetYTD"], "jml_visit_ytd": j["JmlVisitYTD"]}),
-            "scal_juli": ({} if j is None else {"scal_bc": j["ScalBC"], "net_scaling": j["NetScaling"]}),
-            "rincian_juli": ({} if j is None else {
-                "AO": j["AO"], "MO+": j["MOPlus"], "TERMIN": j["TERMIN"], "RO": j["RO"],
-                "SO": j["SO"], "DO": j["DO"], "MO-": j["MOMinus"], "ADJ": j["ADJ"], "TOTAL": j["TOTAL"]}),
-            "kecukupan_agustus": ({} if a is None else {
-                "est_rev_f3f4": a["EstRevF3F4"], "est_rev_all": a["EstRevAll"]}),
-            "visit_agustus": ({} if a is None else {
-                "visit_cm": a["VisitCM"], "target_cm": a["TargetCM"],
-                "visit_ytd": a["VisitYTD"], "target_ytd": a["TargetYTD"]}),
-            "list_cc": [{"cc": row["CC"], "lop": row["KetLOP"], "scal": row["KetScal"]}
+            "photo": s.get("PhotoFile", ""),
+            "period_ytd": s["PeriodYTD"], "period_month": s["PeriodMonth"], "cutoff_date": s["CutoffDate"],
+            "cc_summary": {"jml_cc": s["JmlCC"], "jml_cc_tanpa_lop": s["JmlCCTanpaLOP"], "jml_cc_tanpa_scal": s["JmlCCTanpaScal"]},
+            "lob_summary": {"jml_lob": s["JmlLOB"], "est_nilai_bc": s["EstNilaiBC"]},
+            "real_rev": ({} if r is None else {
+                "cm": {"target": r["RevCMTarget"], "real": r["RevCMReal"]},
+                "ytd": {"target": r["RevYTDTarget"], "real": r["RevYTDReal"]},
+                "ngtma": {"real": r["NGTMAReal"], "ach": r["NGTMAAch"]},
+                "detail": {"non_pots": r["NonPOTS"], "pots": r["POTS"], "ifrs": r["IFRS"], "total": r["RevTotal"]},
+            }),
+            "real_scaling": ({} if r is None else {
+                "cm": {"scal_bc": r["ScalCMBC"], "net_scaling": r["ScalCMNet"]},
+                "ytd": {"scal_bc": r["ScalYTDBC"], "net_scaling": r["ScalYTDNet"]},
+                "detail": {"AO": r["AO"], "MO+": r["MOPlus"], "TERMIN": r["TERMIN"], "RO": r["RO"],
+                           "SO": r["SO"], "DO": r["DO"], "MO-": r["MOMinus"], "ADJ": r["ADJ"], "TOTAL": r["ScalTOTAL"]},
+            }),
+            "pacer_juli": (_pacer_dict(p_juli.iloc[0]) if len(p_juli) else {}),
+            "pacer_ytd": (_pacer_dict(p_ytd.iloc[0]) if len(p_ytd) else {}),
+            "kecukupan_lop": ({} if l is None else {
+                "target": l["TargetKecLOP"], "est_rev_f3f4": l["EstRevF3F4"], "est_rev_all": l["EstRevAll"]}),
+            "visit_bulan": ({} if l is None else {
+                "cm": {"jml_visit": l["VisitCMJml"], "target": l["VisitCMTarget"]},
+                "ytd": {"jml_visit": l["VisitYTDJml"], "target": l["VisitYTDTarget"]},
+            }),
+            "list_cc": [{"cc": row["CC"], "jml_lop": row["JmlLOP"], "jml_scal": row["JmlScalBC"]}
                         for _, row in cc_rows.iterrows()],
+            "list_lop": [{"lop_id": row["LopID"], "proj": row["Proj"], "est_bc": row["EstBC"], "ket_lob": row["KetLOB"]}
+                         for _, row in lop_id_rows.iterrows()],
         }
     return result
 
@@ -408,6 +491,23 @@ def render_logos():
         {imgs_html}
     </div>
     """, unsafe_allow_html=True)
+
+
+# Taruh foto AM di folder "assets/photos/" pada repo GitHub, nama file sesuai kolom
+# PhotoFile di sheet AM_Summary. Kalau file belum ada, otomatis tampil ikon placeholder.
+PHOTO_DIR = "assets/photos"
+
+
+def render_am_photo(filename):
+    path = os.path.join(PHOTO_DIR, filename) if filename else None
+    if path and os.path.exists(path):
+        with open(path, "rb") as f:
+            b64 = base64.b64encode(f.read()).decode()
+        ext = path.rsplit(".", 1)[-1]
+        inner = f'<img src="data:image/{ext};base64,{b64}">'
+    else:
+        inner = f"<span style='font-size:56px; color:{MUTED};'>👤</span>"
+    st.markdown(f"<div class='am-photo-frame'>{inner}</div>", unsafe_allow_html=True)
 
 
 def _read_sheets_into(data, is_real, file_like, source_label):
@@ -459,7 +559,7 @@ def load_data(uploaded_file):
 def make_template_excel():
     buf = BytesIO()
     d = dummy_data()
-    h1_df, juli_df, agustus_df, cc_df = am_detail_to_sheets(AM_DETAIL_DEFAULT)
+    summary_df, rev_df, pacer_df, lop_df, cc_df, lop_id_df = am_detail_to_sheets(AM_DETAIL_DEFAULT)
     with pd.ExcelWriter(buf, engine="openpyxl") as writer:
         d["prs_monthly"].to_excel(writer, sheet_name="PRS_Bulanan", index=False)
         d["prs_kpi"].to_excel(writer, sheet_name="PRS_KPI", index=False)
@@ -467,10 +567,12 @@ def make_template_excel():
         d["prs_regional"].to_excel(writer, sheet_name="PRS_Regional", index=False)
         d["am"].to_excel(writer, sheet_name="AM_Performance", index=False)
         d["action"].to_excel(writer, sheet_name="Action_Plan", index=False)
-        h1_df.to_excel(writer, sheet_name="AM_Scorecard_H1", index=False)
-        juli_df.to_excel(writer, sheet_name="AM_Scorecard_Juli", index=False)
-        agustus_df.to_excel(writer, sheet_name="AM_Scorecard_Agustus", index=False)
+        summary_df.to_excel(writer, sheet_name="AM_Summary", index=False)
+        rev_df.to_excel(writer, sheet_name="AM_RealRev_Scaling", index=False)
+        pacer_df.to_excel(writer, sheet_name="AM_Pacer", index=False)
+        lop_df.to_excel(writer, sheet_name="AM_Kecukupan_LOP_Visit", index=False)
         cc_df.to_excel(writer, sheet_name="AM_List_CC", index=False)
+        lop_id_df.to_excel(writer, sheet_name="AM_List_LOP", index=False)
     return buf.getvalue()
 
 
@@ -501,9 +603,10 @@ with _icon_col:
             - **PRS_Regional**: Region, Value
             - **AM_Performance**: Name, Region, Target, Score, Komunikasi, Negosiasi, Kepatuhan, KepuasanKlien, Pelaporan
             - **Action_Plan**: AM, Item, Due, Priority, Status
-            - **AM_Scorecard_H1**, **AM_Scorecard_Juli**, **AM_Scorecard_Agustus**, **AM_List_CC**:
-              detail scorecard per-AM (4 sheet ini harus lengkap semua supaya terbaca — kalau salah satu
-              kosong, tampilan AM Performance tetap pakai data contoh)
+            - **AM_Summary**, **AM_RealRev_Scaling**, **AM_Pacer**, **AM_Kecukupan_LOP_Visit**,
+              **AM_List_CC**, **AM_List_LOP**: detail scorecard per-AM (6 sheet ini harus lengkap semua
+              supaya terbaca — kalau salah satu kosong, tampilan AM Performance tetap pakai data contoh).
+              Kolom `PhotoFile` di **AM_Summary** diisi nama file foto yang ditaruh di folder `assets/photos/`.
             """)
 
         data, is_real, source = load_data(uploaded)
@@ -677,6 +780,29 @@ def _two_col_gap(l1, raw1, str1, l2, raw2, str2):
     </div>"""
 
 
+def _pacer_card(title, p, gold=False):
+    """Kartu PACER (Result & Process sebagai badge angka besar), pakai style panel yang sama dengan bagian lain."""
+    result_cls = "g" if p["result"] >= 75 else "r"
+    process_cls = "g" if p["process"] >= 25 else "r"
+    result_row = f"""<div class='am-row'><span>TOTAL POIN RESULT</span>
+        <span class='am-bignum {result_cls}'>{p['result']}</span></div>"""
+    sub_result = (_row("Ach Revenue", f"{p['ach_revenue']}%")
+                  + _row("Ach Scaling", f"{p['ach_scaling']}%")
+                  + _row("Win Rate", f"{p['win_rate']}%")
+                  + _row("Kecukupan Qualified", f"{p['kecukupan_qualified']}%"))
+    process_row = f"""<div class='am-row'><span>TOTAL POIN PROCESS</span>
+        <span class='am-bignum {process_cls}'>{p['process']}</span></div>"""
+    sub_process = (_row("KEC LOP", f"{p['kec_lop']}%")
+                   + _row(f"Jml VISIT (T. {p['target_visit']})", p["jml_visit"]))
+    total_row = _row("TOTAL POIN PACER", p["total_pacer"], "total")
+    kuadran_row = _row_pill("KUADRAN AM", p["kuadran"], "n")
+    return _panel(title, [
+        (None, result_row), (None, sub_result),
+        (None, process_row), (None, sub_process),
+        (None, total_row + kuadran_row),
+    ], gold=gold)
+
+
 def render_am():
     st.button("← Overview", on_click=goto, args=("overview",))
     st.markdown(f"## AM <span style='color:{CYAN}'>Performance</span>", unsafe_allow_html=True)
@@ -685,111 +811,101 @@ def render_am():
     selected = st.selectbox("Pilih Account Manager", names, label_visibility="collapsed")
     d = data["am_detail"][selected]
 
-    st.markdown(f"<div class='am-banner'>{selected.upper()}</div>", unsafe_allow_html=True)
+    # ============== BARIS ATAS: Performance YTD | PACER | Foto+Nama ==============
+    col_perf, col_pacer, col_photo = st.columns([1.2, 1.7, 0.7])
 
-    col_l, col_r = st.columns([1, 1.6])
+    with col_perf:
+        st.markdown(f"##### PERFORMANCE YTD {d['period_ytd']}")
+        rr = d["real_rev"]
+        cm_ach = rr["cm"]["real"] / rr["cm"]["target"] * 100 if rr["cm"]["target"] else 0    # RUMUS: Real / Target
+        ytd_ach = rr["ytd"]["real"] / rr["ytd"]["target"] * 100 if rr["ytd"]["target"] else 0
+        body = (_row("CM Target", _fmt_m(rr["cm"]["target"])) + _row("CM Real (Incl IFRS)", _fmt_m(rr["cm"]["real"]))
+                + _row_ach("CM ACH", cm_ach)
+                + _row("YTD Target", _fmt_m(rr["ytd"]["target"])) + _row("YTD Real (Incl IFRS)", _fmt_m(rr["ytd"]["real"]))
+                + _row_ach("YTD ACH", ytd_ach)
+                + _row("NGTMA Real", _fmt_m(rr["ngtma"]["real"]))
+                + _row_pill("NGTMA ACH", f"{rr['ngtma']['ach']}%", _ach(rr["ngtma"]["ach"])))
+        st.markdown(_panel("REAL REV", [(None, body)]), unsafe_allow_html=True)
 
-    # ---------------- LEFT: Performance H1 ----------------
-    with col_l:
-        st.markdown(_panel("REV H1", [(None,
-            _row("REAL", _fmt_m(_parse_m(d["rev_h1"]["real"]))) + _row_ach("ACH", d["rev_h1"]["ach"])
-        )]), unsafe_allow_html=True)
+        det = rr["detail"]
+        body2 = (_row("NON POTS", _fmt_m(det["non_pots"])) + _row("POTS", _fmt_m(det["pots"]))
+                 + _row("IFRS", _fmt_m(det["ifrs"])) + _row("TOTAL", _fmt_m(det["total"]), "total"))
+        st.markdown(_panel("DETAIL REVENUE YTD", [(None, body2)], gold=True), unsafe_allow_html=True)
 
-        lv = d["lop_visit_h1"]
-        ach_visit = lv["jml_visit"] / lv["target_visit"] * 100 if lv["target_visit"] else 0  # RUMUS: Jml Visit / Target Visit
-        body = (_row_pill("KECUKUPAN ALL LOP", f"{lv['kecukupan_all_lop']}%", _ach(lv["kecukupan_all_lop"]))
-                + _row(f"JML VISIT (T. {lv['target_visit']} Visit)", lv["jml_visit"])
-                + _row_ach("ACH VISIT", ach_visit))
-        st.markdown(_panel("LOP & VISIT H1", [(None, body)]), unsafe_allow_html=True)
+        rs = d["real_scaling"]
+        body3 = (_row("CM Scal BC", _fmt_m(rs["cm"]["scal_bc"])) + _row("CM Net Scaling", _fmt_m(rs["cm"]["net_scaling"]))
+                 + _row("YTD Scal BC", _fmt_m(rs["ytd"]["scal_bc"])) + _row("YTD Net Scaling", _fmt_m(rs["ytd"]["net_scaling"])))
+        st.markdown(_panel("REAL SCALING", [(None, body3)]), unsafe_allow_html=True)
 
-        sc = d["scal_h1"]
-        body = (_row("SCAL BC (AO, MO+, TERMIN, RO)", _fmt_m(_parse_m(sc["scal_bc"])))
-                + _row("NET SCALING", _fmt_m(_parse_m(sc["net_scaling"]))))
-        st.markdown(_panel("SCAL H1", [(None, body)], gold=True), unsafe_allow_html=True)
+        dn = rs["detail"]
+        body4 = ("".join(_row(k, _fmt_m(dn[k]), "g") for k in ["AO", "MO+", "TERMIN", "RO"])
+                 + "".join(_row(k, _fmt_m(dn[k]), "r") for k in ["SO", "DO", "MO-", "ADJ"])
+                 + _row("TOTAL", _fmt_m(dn["TOTAL"]), "total"))
+        st.markdown(_panel("DETAIL NET SCALING YTD", [(None, body4)], gold=True), unsafe_allow_html=True)
 
-        rn = d["rincian_h1"]
-        body = ("".join(_row(k, _fmt_m(_parse_m(rn[k])), "g") for k in ["AO", "MO+", "TERMIN", "RO"])
-                + "".join(_row(k, _fmt_m(_parse_m(rn[k])), "r") for k in ["SO", "DO", "MO-", "ADJ"])
-                + _row("TOTAL", _fmt_m(_parse_m(rn["TOTAL"])), "total"))
-        st.markdown(_panel("RINCIAN NET SCALING H1", [(None, body)], gold=True), unsafe_allow_html=True)
+    with col_pacer:
+        pc1, pc2 = st.columns(2)
+        with pc1:
+            st.markdown(_pacer_card("PACER JULI", d["pacer_juli"]), unsafe_allow_html=True)
+        with pc2:
+            st.markdown(_pacer_card("PACER YTD JULI", d["pacer_ytd"], gold=True), unsafe_allow_html=True)
 
-        pc = d["pacer_h1"]
-        result_cls = "g" if pc["result"] >= 75 else "r"   # RULE: Merah < 75, Hijau >= 75
-        process_cls = "g" if pc["process"] >= 25 else "r"  # RULE: Merah < 25, Hijau >= 25
-        body = (_row("TOTAL POIN RESULT", pc["result"], result_cls)
-                + _row("TOTAL POIN PROCESS", pc["process"], process_cls)
-                + _row("TOTAL ALL", pc["total"], "total")
-                + _row_pill("KUADRAN AM", pc["kuadran"], "n"))
-        st.markdown(_panel("PACER H1", [(None, body)]), unsafe_allow_html=True)
+    with col_photo:
+        render_am_photo(d.get("photo"))
+        st.markdown(f"<div class='am-banner' style='font-size:14px; padding:12px; margin-top:12px;'>{selected.upper()}</div>",
+                    unsafe_allow_html=True)
 
-    # ---------------- RIGHT: Juli & Agustus ----------------
-    with col_r:
-        r1, r2 = st.columns(2)
-        with r1:
-            k = d["kecukupan_lop_juli"]
-            est_rev_lop = _parse_m(k["est_rev_lop"])
-            kebutuhan_lop = _parse_m(k["kebutuhan_lop"])
-            ach_lop = est_rev_lop / kebutuhan_lop * 100 if kebutuhan_lop else 0  # RUMUS: Est Rev LOP / Kebutuhan LOP
-            body1 = (_row("TARGET SCAL RKAP", _fmt_m(_parse_m(k["target_scal_rkap"])))
-                     + _row("KEBUTUHAN LOP (2X T.SCAL)", _fmt_m(kebutuhan_lop))
-                     + _row("EST REV LOP", _fmt_m(est_rev_lop))
-                     + _row_ach("ACH", ach_lop))
-            v = d["visit_juli"]
-            ach_cm = v["jml_visit_cm"] / v["target_cm"] * 100 if v["target_cm"] else 0      # RUMUS: Jml Visit CM / Target CM
-            ach_ytd = v["jml_visit_ytd"] / v["target_ytd"] * 100 if v["target_ytd"] else 0  # RUMUS: Jml Visit YTD / Target YTD
-            body2 = (_row("TARGET CM", v["target_cm"])
-                     + _row("JML VISIT CM", v["jml_visit_cm"])
-                     + _row_ach("ACH CM", ach_cm)
-                     + _row("TARGET YTD", v["target_ytd"])
-                     + _row("JML VISIT YTD", v["jml_visit_ytd"])
-                     + _row_ach("ACH YTD", ach_ytd))
-            st.markdown(_panel("LOP & VISIT JULI (Cut off 3 Agustus)", [
-                ("KECUKUPAN ALL LOP", body1), ("VISIT JULI & YTD JULI", body2),
-            ]), unsafe_allow_html=True)
+    # ============== BARIS BAWAH: Kecukupan LOP & Visit | List CC | List LOP ==============
+    col_lop, col_cc, col_lobtable = st.columns([1, 1.3, 1.3])
 
-        with r2:
-            sj = d["scal_juli"]
-            body1 = (_row("SCAL BC (AO, MO+, TERMIN, RO)", _fmt_m(_parse_m(sj["scal_bc"])))
-                     + _row("NET SCALING", _fmt_m(_parse_m(sj["net_scaling"]))))
-            rj = d["rincian_juli"]
-            body2 = ("".join(_row(k, _fmt_m(_parse_m(rj[k])), "g") for k in ["AO", "MO+", "TERMIN", "RO"])
-                     + "".join(_row(k, _fmt_m(_parse_m(rj[k])), "r") for k in ["SO", "DO", "MO-", "ADJ"])
-                     + _row("TOTAL", _fmt_m(_parse_m(rj["TOTAL"])), "total"))
-            st.markdown(_panel("SCALING JULI 2026", [
-                ("SCAL JULI", body1), ("RINCIAN NET SCALING JULI", body2),
-            ], gold=True), unsafe_allow_html=True)
+    with col_lop:
+        kl = d["kecukupan_lop"]
+        target = kl["target"]
+        f34, allv = kl["est_rev_f3f4"], kl["est_rev_all"]
+        ach_f34 = f34 / target * 100 if target else 0     # RUMUS: Est Rev / Target Kec. LOP
+        ach_all = allv / target * 100 if target else 0
+        gap_f34 = target - f34                              # RUMUS: Target - Est Rev (Lower Better)
+        gap_all = target - allv
+        body_f34 = _row("EST REV 2026", _fmt_m(f34)) + _row_ach("ACH", ach_f34) + _row_gap("GAP (Lower Better)", gap_f34, _fmt_m(gap_f34))
+        body_all = _row("EST REV 2026", _fmt_m(allv)) + _row_ach("ACH", ach_all) + _row_gap("GAP (Lower Better)", gap_all, _fmt_m(gap_all))
+        st.markdown(_panel(f"KECUKUPAN LOP {d['period_month']}", [
+            (None, _row("TARGET KEC. LOP", _fmt_m(target))),
+            ("LOP F3-F4", body_f34), ("ALL LOP (F0-F4)", body_all),
+        ]), unsafe_allow_html=True)
 
-        r3, r4 = st.columns(2)
-        with r3:
-            ka = d["kecukupan_agustus"]
-            est_rev_f3f4 = _parse_m(ka["est_rev_f3f4"])
-            est_rev_all = _parse_m(ka["est_rev_all"])
-            # RUMUS: dibandingkan terhadap Kebutuhan LOP Juli (sumber kebutuhan yang sama)
-            ach_f3f4 = est_rev_f3f4 / kebutuhan_lop * 100 if kebutuhan_lop else 0
-            ach_all = est_rev_all / kebutuhan_lop * 100 if kebutuhan_lop else 0
-            gap_f3f4 = kebutuhan_lop - est_rev_f3f4   # RUMUS: Kebutuhan LOP - Est Rev (Lower Better)
-            gap_all = kebutuhan_lop - est_rev_all
-            body = (_two_col("EST REV LOP F3-F4", _fmt_m(est_rev_f3f4), "", "EST REV ALL LOP", _fmt_m(est_rev_all), "")
-                    + _two_col_ach("ACH", ach_f3f4, "ACH", ach_all)
-                    + _two_col_gap("GAP (Lower Better)", gap_f3f4, _fmt_m(gap_f3f4),
-                                    "GAP (Lower Better)", gap_all, _fmt_m(gap_all)))
-            st.markdown(_panel("KECUKUPAN LOP AGUSTUS", [(None, body)]), unsafe_allow_html=True)
+        vb = d["visit_bulan"]
+        cm_v_ach = vb["cm"]["jml_visit"] / vb["cm"]["target"] * 100 if vb["cm"]["target"] else 0   # RUMUS: Jml Visit / Target
+        ytd_v_ach = vb["ytd"]["jml_visit"] / vb["ytd"]["target"] * 100 if vb["ytd"]["target"] else 0
+        body_cm = _row("JML VISIT", vb["cm"]["jml_visit"]) + _row_ach(f"ACH (T. {vb['cm']['target']} Visit)", cm_v_ach)
+        body_ytd = _row("JML VISIT", vb["ytd"]["jml_visit"]) + _row_ach(f"ACH (T. {vb['ytd']['target']} Visit)", ytd_v_ach)
+        st.markdown(_panel(f"VISIT {d['period_month']}", [
+            ("VISIT CM", body_cm), ("VISIT YTD", body_ytd),
+        ], gold=True), unsafe_allow_html=True)
 
-        with r4:
-            va = d["visit_agustus"]
-            ach_cm_ag = va["visit_cm"] / va["target_cm"] * 100 if va["target_cm"] else 0      # RUMUS: Visit CM / Target CM
-            ach_ytd_ag = va["visit_ytd"] / va["target_ytd"] * 100 if va["target_ytd"] else 0  # RUMUS: Visit YTD / Target YTD
-            body = (_two_col(f"VISIT CM (T. {va['target_cm']} Visit)", va["visit_cm"], "",
-                              f"VISIT YTD (T. {va['target_ytd']} Visit)", va["visit_ytd"], "")
-                    + _two_col_ach("ACH", ach_cm_ag, "ACH", ach_ytd_ag))
-            st.markdown(_panel("VISIT AGUSTUS", [(None, body)], gold=True), unsafe_allow_html=True)
-
-        st.markdown(_panel("LIST CC AM (Cut off 3 Agustus)", [(None, "")]), unsafe_allow_html=True)
+    with col_cc:
+        cs = d["cc_summary"]
+        m1, m2, m3 = st.columns(3)
+        m1.metric("JML CC", cs["jml_cc"])
+        m2.metric("JML CC TANPA LOP", cs["jml_cc_tanpa_lop"])
+        m3.metric("JML CC TANPA SCAL", cs["jml_cc_tanpa_scal"])
+        st.markdown(_panel(f"LIST CC (Cut off {d['cutoff_date']})", [(None, "")]), unsafe_allow_html=True)
         cc_df = pd.DataFrame([
-            {"AM 2026": selected, "CC": c["cc"], "KET LOP 2026": c["lop"], "KET SCAL BC YTD JULI": c["scal"]}
+            {"CC": c["cc"], "JML LOP 2026": c["jml_lop"], f"JML SCAL BC YTD {d['period_ytd'].split()[0]}": c["jml_scal"]}
             for c in d["list_cc"]
         ])
         st.dataframe(cc_df, use_container_width=True, hide_index=True)
+
+    with col_lobtable:
+        lb = d["lob_summary"]
+        m1, m2 = st.columns(2)
+        m1.metric("JML LOB", lb["jml_lob"])
+        m2.metric("EST NILAI BC", f"{lb['est_nilai_bc']:.7f}")
+        st.markdown(_panel("LIST LOP ID", [(None, "")]), unsafe_allow_html=True)
+        lop_df = pd.DataFrame([
+            {"LOP ID": l["lop_id"], "PROJ": l["proj"], "EST BC": l["est_bc"], "KET LOB": l["ket_lob"]}
+            for l in d["list_lop"]
+        ])
+        st.dataframe(lop_df, use_container_width=True, hide_index=True)
 
 
 # ----------------------------------------------------------------------------
