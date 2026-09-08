@@ -142,7 +142,7 @@ div[data-testid="stMetric"]{{
 .am-bignum.g{{ background:{GREEN}; color:#ffffff; box-shadow:0 0 14px {GREEN_GLOW}; }}
 .am-bignum.r{{ background:{RED}; color:#ffffff; box-shadow:0 0 14px {RED_GLOW}; }}
 .am-photo-frame{{
-    width:100%; height:190px; border-radius:16px; overflow:hidden;
+    width:100%; height:280px; border-radius:16px; overflow:hidden;
     border:1px solid {BORDER}; box-shadow:0 0 20px {GLOW1}; background:{CARD};
     display:flex; align-items:center; justify-content:center;
 }}
