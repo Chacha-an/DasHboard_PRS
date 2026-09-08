@@ -137,7 +137,7 @@ div[data-testid="stMetric"]{{
 .am-badge.r{{ background:{RED}; color:#ffffff; box-shadow:0 0 12px {RED_GLOW}; }}
 .am-badge.n{{ background:{CYAN}; color:{HEADER_TEXT}; box-shadow:0 0 12px {GLOW1}; }}
 .am-bignum{{
-    display:inline-block; padding:4px 20px; border-radius:12px; font-weight:900; font-size:22px;
+    display:inline-block; padding:3px 12px; border-radius:999px; font-weight:900; font-size:12.5px; letter-spacing:0.3px;
 }}
 .am-bignum.g{{ background:{GREEN}; color:#ffffff; box-shadow:0 0 14px {GREEN_GLOW}; }}
 .am-bignum.r{{ background:{RED}; color:#ffffff; box-shadow:0 0 14px {RED_GLOW}; }}
