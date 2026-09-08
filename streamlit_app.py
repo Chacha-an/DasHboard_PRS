@@ -142,11 +142,26 @@ div[data-testid="stMetric"]{{
 .am-bignum.g{{ background:{GREEN}; color:#ffffff; box-shadow:0 0 14px {GREEN_GLOW}; }}
 .am-bignum.r{{ background:{RED}; color:#ffffff; box-shadow:0 0 14px {RED_GLOW}; }}
 .am-photo-frame{{
-    width:100%; aspect-ratio:3/4; border-radius:16px; overflow:hidden;
+    width:100%; height:190px; border-radius:16px; overflow:hidden;
     border:1px solid {BORDER}; box-shadow:0 0 20px {GLOW1}; background:{CARD};
     display:flex; align-items:center; justify-content:center;
 }}
 .am-photo-frame img{{ width:100%; height:100%; object-fit:cover; }}
+
+/* Stat box bold + center — pengganti st.metric() yang suka kepotong */
+.am-stat{{
+    text-align:center; padding:12px 6px; border:1px solid {BORDER}; border-radius:12px;
+    background:{CARD}; margin-bottom:8px;
+}}
+.am-stat .lbl{{ font-size:10px; font-weight:800; color:{MUTED}; text-transform:uppercase; letter-spacing:0.3px; margin-bottom:5px; }}
+.am-stat .val{{ font-size:22px; font-weight:900; color:{TEXT}; }}
+
+/* Sub-judul section — kotak solid + highlight, dipakai sebagai pemisah antar baris */
+.am-section-title{{
+    background:{CYAN}; color:{HEADER_TEXT}; font-weight:900; font-size:14px; text-align:center;
+    letter-spacing:0.6px; padding:11px 16px; border-radius:10px; margin:20px 0 12px;
+    box-shadow:0 0 16px {GLOW1};
+}}
 </style>
 """, unsafe_allow_html=True)
 
@@ -776,6 +791,16 @@ def _row_label(text, highlight=False):
     return f"<div class='am-row {cls}'><span>{text}</span></div>"
 
 
+def _stat_box(label, value):
+    """Kotak angka bold + center — pengganti st.metric() yang suka kepotong labelnya."""
+    return f"<div class='am-stat'><div class='lbl'>{label}</div><div class='val'>{value}</div></div>"
+
+
+def render_section_title(text):
+    """Sub-judul section: kotak solid + highlight, dipakai sebagai pemisah antar baris di halaman AM Performance."""
+    st.markdown(f"<div class='am-section-title'>{text}</div>", unsafe_allow_html=True)
+
+
 def _two_col_ach(l1, v1, l2, v2):
     return f"""<div style="display:flex;">
         <div style="flex:1;">{_row_ach(l1, v1)}</div>
@@ -823,6 +848,7 @@ def render_am():
     month_ytd = d["period_ytd"].split()[0] if d.get("period_ytd") else ""
 
     # ============== BARIS 1: Foto+Nama | PACER Juli | PACER YTD Juli ==============
+    render_section_title("PACER AM PRS")
     col_photo, col_pacer1, col_pacer2 = st.columns([0.8, 1, 1])
 
     with col_photo:
@@ -837,7 +863,7 @@ def render_am():
         st.markdown(_pacer_card("PACER YTD JULI", d["pacer_ytd"], gold=True), unsafe_allow_html=True)
 
     # ============== BARIS 2: Real Rev | Detail Rev YTD | Real Scaling | Detail Net Scaling YTD ==============
-    st.markdown(f"##### PERFORMANCE YTD {d['period_ytd']}")
+    render_section_title(f"PERFORMANCE YTD {d['period_ytd']}")
     col_rr, col_drv, col_rs, col_dns = st.columns(4)
 
     rr = d["real_rev"]
@@ -877,6 +903,7 @@ def render_am():
         st.markdown(_panel("DETAIL NET SCALING YTD", [(None, body4)], gold=True), unsafe_allow_html=True)
 
     # ============== BARIS BAWAH: Kecukupan LOP & Visit | List CC | List LOP ==============
+    render_section_title(f"ENSURING {d['period_month']}")
     col_lop, col_cc, col_lobtable = st.columns([1, 1.3, 1.3])
 
     with col_lop:
@@ -905,10 +932,12 @@ def render_am():
 
     with col_cc:
         cs = d["cc_summary"]
-        m1, m2, m3 = st.columns(3)
-        m1.metric("JML CC", cs["jml_cc"])
-        m2.metric("JML CC TANPA LOP", cs["jml_cc_tanpa_lop"])
-        m3.metric("JML CC TANPA SCAL", cs["jml_cc_tanpa_scal"])
+        stats_html = f"""<div style="display:flex; gap:8px;">
+            <div style="flex:1;">{_stat_box("JML CC", cs["jml_cc"])}</div>
+            <div style="flex:1;">{_stat_box("TANPA LOP", cs["jml_cc_tanpa_lop"])}</div>
+            <div style="flex:1;">{_stat_box("TANPA SCAL", cs["jml_cc_tanpa_scal"])}</div>
+        </div>"""
+        st.markdown(stats_html, unsafe_allow_html=True)
         st.markdown(_panel(f"LIST CC (Cut off {d['cutoff_date']})", [(None, "")]), unsafe_allow_html=True)
         cc_df = pd.DataFrame([
             {"CC": c["cc"], "JML LOP 2026": c["jml_lop"], f"JML SCAL BC YTD {d['period_ytd'].split()[0]}": c["jml_scal"]}
@@ -918,9 +947,11 @@ def render_am():
 
     with col_lobtable:
         lb = d["lob_summary"]
-        m1, m2 = st.columns(2)
-        m1.metric("JML LOB", lb["jml_lob"])
-        m2.metric("EST NILAI BC", f"{lb['est_nilai_bc']:.7f}")
+        stats_html = f"""<div style="display:flex; gap:8px;">
+            <div style="flex:1;">{_stat_box("JML LOB", lb["jml_lob"])}</div>
+            <div style="flex:1;">{_stat_box("EST NILAI BC", f"{lb['est_nilai_bc']:.4f}")}</div>
+        </div>"""
+        st.markdown(stats_html, unsafe_allow_html=True)
         st.markdown(_panel("LIST LOP ID", [(None, "")]), unsafe_allow_html=True)
         lop_df = pd.DataFrame([
             {"LOP ID": l["lop_id"], "PROJ": l["proj"], "EST BC": l["est_bc"], "KET LOB": l["ket_lob"]}
