@@ -918,7 +918,7 @@ def render_prs():
 
         body_html = "".join(_visit_row_html(r) for r in visit_rows) + _visit_row_html(total_row, is_total=True)
         headers = ["NAMA AM", "TARGET"] + MONTHS_JAN_SEPT + ["TOTAL", "ACH"]
-        render_html_table(headers, body_html, GOLD)
+        render_html_table(headers, body_html, CYAN)
         st.caption("Catatan: kalau ada AM cuti/tidak ada data di bulan tertentu, kolom bulan itu akan kosong "
                    "(bukan sel gabungan bertuliskan status seperti di Excel aslinya).")
     else:
