@@ -808,7 +808,7 @@ def _monthly_bar_chart(title, monthly_df):
             bgcolor=color, borderpad=3,
         ))
     fig.update_layout(**PLOTLY_LAYOUT, barmode="group", annotations=annotations,
-                       yaxis_title="Miliar (M)", legend=dict(orientation="h", y=1.15, x=0))
+                       yaxis_title="Miliar (M)")
     st.markdown(f"##### {title}")
     st.plotly_chart(fig, use_container_width=True)
 
