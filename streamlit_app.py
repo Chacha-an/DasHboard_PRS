@@ -28,7 +28,7 @@ st.set_page_config(
 # THEME / CSS — mendukung mode Gelap & Terang, teal + glow tetap jadi ciri khasnya
 # ----------------------------------------------------------------------------
 if "theme" not in st.session_state:
-    st.session_state.theme = "light"
+    st.session_state.theme = "dark"
 
 THEMES = {
     "dark": {
@@ -185,6 +185,16 @@ div[data-testid="stMetric"]{{
 .quad-chip .noimg{{ background:{BG2}; display:flex; align-items:center; justify-content:center; font-size:18px; }}
 .quad-chip .nm{{ font-size:8.5px; font-weight:700; margin-top:3px; line-height:1.15; color:{TEXT}; }}
 .quad-empty{{ color:{MUTED}; font-size:10px; text-align:center; padding-top:20px; }}
+
+/* Tabel HTML custom (LOP AM 2026, Visit 2026) — dipakai supaya header pasti berwarna,
+   karena st.dataframe kadang tidak nurut styling header dari pandas */
+.html-table{{ width:100%; border-collapse:collapse; font-size:12px; white-space:nowrap; }}
+.html-table th{{ padding:9px 10px; text-align:center; font-weight:800; }}
+.html-table td{{ padding:7px 10px; text-align:center; border-bottom:1px solid {ROWBORDER}; color:{TEXT}; }}
+.html-table tbody tr:nth-child(even) td{{ background:rgba(120,120,120,0.05); }}
+.html-table td.g{{ color:{GREEN}; font-weight:700; }}
+.html-table td.r{{ color:{RED}; font-weight:700; }}
+.html-table tr.total td{{ background:{TOTALBG}; font-weight:800; }}
 </style>
 """, unsafe_allow_html=True)
 
@@ -222,35 +232,8 @@ def dummy_data():
         "Mitra": ["Telkomsel", "Telkom Akses", "Mitra Distribusi A", "Mitra Distribusi B"],
         "Nominal": [45000000000, 30000000000, 12000000000, 8000000000],
     })
-    am = pd.DataFrame({
-        "Name": ["Rina Wulandari", "Bagus Santoso", "Dewi Anggraini", "Fajar Nugroho",
-                 "Siti Rahmawati", "Andi Kurniawan", "Putri Handayani", "Yusuf Hidayat"],
-        "Region": ["Jakarta", "Surabaya", "Bandung", "Medan", "Makassar", "Semarang", "Denpasar", "Palembang"],
-        "Target": [96, 91, 88, 82, 79, 75, 73, 69],
-        "Score": [94.2, 89.5, 86.1, 80.4, 77.8, 74.0, 71.6, 68.2],
-        "Komunikasi": [92, 85, 88, 80, 82, 78, 75, 70],
-        "Negosiasi": [88, 90, 80, 78, 81, 76, 74, 69],
-        "Kepatuhan": [95, 80, 85, 79, 83, 77, 72, 68],
-        "KepuasanKlien": [90, 88, 84, 81, 80, 75, 73, 70],
-        "Pelaporan": [85, 82, 90, 77, 79, 74, 76, 66],
-    })
-    action = pd.DataFrame({
-        "AM": ["Rina Wulandari", "Bagus Santoso", "Dewi Anggraini", "Fajar Nugroho",
-               "Siti Rahmawati", "Andi Kurniawan", "Putri Handayani", "Yusuf Hidayat"],
-        "Item": [
-            "Follow-up renewal kontrak Gedung A", "Survey kepuasan tenant Q3",
-            "Update laporan maintenance mingguan", "Negosiasi ulang kontrak vendor cleaning",
-            "Audit aset idle regional Makassar", "Penyelesaian komplain tenant lantai 4",
-            "Pembaruan data okupansi bulanan", "Koordinasi perbaikan lift Gedung C",
-        ],
-        "Due": ["2026-08-12", "2026-08-15", "2026-08-08", "2026-08-20",
-                "2026-08-18", "2026-08-10", "2026-08-14", "2026-08-09"],
-        "Priority": ["Tinggi", "Sedang", "Rendah", "Tinggi", "Sedang", "Tinggi", "Rendah", "Tinggi"],
-        "Status": ["Berjalan", "Belum Mulai", "Selesai", "Berjalan", "Berjalan", "Belum Mulai", "Selesai", "Berjalan"],
-    })
     return {"prs_monthly_revenue": prs_monthly_revenue, "prs_monthly_ngtma": prs_monthly_ngtma,
-            "prs_detail_revenue": prs_detail_revenue, "prs_detail_mitra": prs_detail_mitra,
-            "am": am, "action": action}
+            "prs_detail_revenue": prs_detail_revenue, "prs_detail_mitra": prs_detail_mitra}
 
 
 # ----------------------------------------------------------------------------
@@ -284,7 +267,6 @@ AM_DETAIL_DEFAULT = {
         "visit_monthly": {"target": 144, "months": {"Jan": 14, "Feb": 14, "Mar": 13, "Apr": 21, "May": 11,
                                                        "Jun": 20, "Jul": 17, "Aug": 27, "Sept": 4}},
         "visit_bulan": {"cm": {"jml_visit": 7, "target": 16}, "ytd": {"jml_visit": 154, "target": 128}},
-        "cc_summary": {"jml_cc": 9, "jml_cc_tanpa_lop": 2, "jml_cc_tanpa_scal": 3},
         "list_cc": [
             {"cc": "PT Bara Tabang", "jml_lop": "1 LOP", "jml_scal": "TIDAK ADA SCALING"},
             {"cc": "Podomoro Group", "jml_lop": "10 LOP", "jml_scal": "0,16 M"},
@@ -296,7 +278,6 @@ AM_DETAIL_DEFAULT = {
             {"cc": "Orica", "jml_lop": "TIDAK ADA LOP", "jml_scal": "0,83 M"},
             {"cc": "Permata Senayan (Arthatel)", "jml_lop": "TIDAK ADA LOP", "jml_scal": "TIDAK ADA SCALING"},
         ],
-        "lob_summary": {"jml_lob": 6, "est_nilai_bc": 0.0320591},
         "list_lop": [
             {"lop_id": "P26-200854", "proj": "APL - PT GPS Astinet dan Indibiz", "est_bc": 0.0045, "ket_lob": "NEW LOB"},
             {"lop_id": "P26-204525", "proj": "PSB Metro P2MP 200 Mbps PT LSAG Cable Indonesia, Artha Industrial Hill Blok E Kav 20-21", "est_bc": 0.010095, "ket_lob": "NEW LOB"},
@@ -332,13 +313,11 @@ AM_DETAIL_DEFAULT = {
         "visit_monthly": {"target": 144, "months": {"Jan": 18, "Feb": 20, "Mar": "Cuti Melahirkan", "Apr": "Cuti Melahirkan",
                                                        "May": 12, "Jun": 22, "Jul": 24, "Aug": 26, "Sept": 8}},
         "visit_bulan": {"cm": {"jml_visit": 18, "target": 16}, "ytd": {"jml_visit": 138, "target": 128}},
-        "cc_summary": {"jml_cc": 12, "jml_cc_tanpa_lop": 1, "jml_cc_tanpa_scal": 2},
         "list_cc": [
             {"cc": "Bank Mega Tbk", "jml_lop": "6 LOP", "jml_scal": "0,45 M"},
             {"cc": "Sinar Mas Land", "jml_lop": "9 LOP", "jml_scal": "0,30 M"},
             {"cc": "Summarecon Agung", "jml_lop": "4 LOP", "jml_scal": "TIDAK ADA SCALING"},
         ],
-        "lob_summary": {"jml_lob": 9, "est_nilai_bc": 0.0541200},
         "list_lop": [
             {"lop_id": "P26-210044", "proj": "APL - PT Bank Mega Cabang Sudirman", "est_bc": 0.0061, "ket_lob": "NEW LOB"},
             {"lop_id": "P26-211320", "proj": "PSB Metro P2MP 500 Mbps Sinar Mas Land Plaza BSD", "est_bc": 0.0125, "ket_lob": "NEW LOB"},
@@ -370,12 +349,10 @@ AM_DETAIL_DEFAULT = {
         "visit_monthly": {"target": 144, "months": {"Jan": 6, "Feb": 8, "Mar": 10, "Apr": 9, "May": 7,
                                                        "Jun": 12, "Jul": 14, "Aug": 15, "Sept": 5}},
         "visit_bulan": {"cm": {"jml_visit": 4, "target": 16}, "ytd": {"jml_visit": 78, "target": 128}},
-        "cc_summary": {"jml_cc": 5, "jml_cc_tanpa_lop": 2, "jml_cc_tanpa_scal": 3},
         "list_cc": [
             {"cc": "Pertamina Retail", "jml_lop": "2 LOP", "jml_scal": "TIDAK ADA SCALING"},
             {"cc": "Krakatau Steel", "jml_lop": "TIDAK ADA LOP", "jml_scal": "TIDAK ADA SCALING"},
         ],
-        "lob_summary": {"jml_lob": 2, "est_nilai_bc": 0.0089000},
         "list_lop": [
             {"lop_id": "P26-198740", "proj": "PSB Astinet Fit 20 Mbps Pertamina Retail SPBU Cilandak", "est_bc": 0.0035, "ket_lob": "NEW LOB"},
         ],
@@ -388,8 +365,6 @@ SHEET_MAP = {
     "PRS_Monthly_NGTMA": "prs_monthly_ngtma",
     "PRS_Detail_Revenue": "prs_detail_revenue",
     "PRS_Detail_Mitra": "prs_detail_mitra",
-    "AM_Performance": "am",
-    "Action_Plan": "action",
 }
 
 # 7 sheet Excel khusus untuk detail scorecard AM Performance (satu paket, dibaca bersamaan)
@@ -402,12 +377,9 @@ def am_detail_to_sheets(am_detail):
     ACH & GAP TIDAK disertakan -> dihitung otomatis, tidak perlu diisi manual."""
     summary_rows, rev_rows, pacer_rows, lop_rows, cc_rows, lop_id_rows, lop_fy_rows, visit_m_rows = [], [], [], [], [], [], [], []
     for name, d in am_detail.items():
-        cs, lb = d["cc_summary"], d["lob_summary"]
         summary_rows.append({
             "Name": name, "PhotoFile": d.get("photo", ""),
             "PeriodYTD": d["period_ytd"], "PeriodMonth": d["period_month"], "CutoffDate": d["cutoff_date"],
-            "JmlCC": cs["jml_cc"], "JmlCCTanpaLOP": cs["jml_cc_tanpa_lop"], "JmlCCTanpaScal": cs["jml_cc_tanpa_scal"],
-            "JmlLOB": lb["jml_lob"], "EstNilaiBC": lb["est_nilai_bc"],
         })
         rr, rs = d["real_rev"], d["real_scaling"]
         rev_rows.append({
@@ -496,8 +468,6 @@ def build_am_detail_from_sheets(sheets):
         result[name] = {
             "photo": s.get("PhotoFile", ""),
             "period_ytd": s["PeriodYTD"], "period_month": s["PeriodMonth"], "cutoff_date": s["CutoffDate"],
-            "cc_summary": {"jml_cc": s["JmlCC"], "jml_cc_tanpa_lop": s["JmlCCTanpaLOP"], "jml_cc_tanpa_scal": s["JmlCCTanpaScal"]},
-            "lob_summary": {"jml_lob": s["JmlLOB"], "est_nilai_bc": s["EstNilaiBC"]},
             "real_rev": ({} if r is None else {
                 "cm": {"target": r["RevCMTarget"], "real": r["RevCMReal"]},
                 "ytd": {"target": r["RevYTDTarget"], "real": r["RevYTDReal"]},
@@ -651,8 +621,6 @@ def make_template_excel():
         d["prs_monthly_ngtma"].to_excel(writer, sheet_name="PRS_Monthly_NGTMA", index=False)
         d["prs_detail_revenue"].to_excel(writer, sheet_name="PRS_Detail_Revenue", index=False)
         d["prs_detail_mitra"].to_excel(writer, sheet_name="PRS_Detail_Mitra", index=False)
-        d["am"].to_excel(writer, sheet_name="AM_Performance", index=False)
-        d["action"].to_excel(writer, sheet_name="Action_Plan", index=False)
         summary_df.to_excel(writer, sheet_name="AM_Summary", index=False)
         rev_df.to_excel(writer, sheet_name="AM_RealRev_Scaling", index=False)
         pacer_df.to_excel(writer, sheet_name="AM_Pacer", index=False)
@@ -689,8 +657,6 @@ with _icon_col:
             - **PRS_Monthly_NGTMA**: Month, Target, Realisasi (12 baris, Jan-Des, angka penuh)
             - **PRS_Detail_Revenue**: Metric (NON POTS/POTS/IFRS), Value (angka penuh)
             - **PRS_Detail_Mitra**: Mitra, Nominal (angka penuh, baris sebanyak jumlah mitra)
-            - **AM_Performance**: Name, Region, Target, Score, Komunikasi, Negosiasi, Kepatuhan, KepuasanKlien, Pelaporan
-            - **Action_Plan**: AM, Item, Due, Priority, Status
             - **AM_Summary**, **AM_RealRev_Scaling**, **AM_Pacer**, **AM_Kecukupan_LOP_Visit**,
               **AM_List_CC**, **AM_List_LOP**: detail scorecard per-AM (6 sheet ini harus lengkap semua
               supaya terbaca — kalau salah satu kosong, tampilan AM Performance tetap pakai data contoh).
@@ -869,46 +835,37 @@ def render_prs():
         })
 
     if lop_rows:
-        lop_df = pd.DataFrame(lop_rows)
         total_row = {"AM 2026": "TOTAL"}
         for col in ["T. SCAL RKAP FY 2026", "KEBUTUHAN LOP (2X Target Scaling)",
                     "EST REV LOP F0-F2", "EST REV LOP F3-F4", "EST REV ALL LOP"]:
-            total_row[col] = lop_df[col].sum()
+            total_row[col] = sum(r[col] for r in lop_rows)
         tk = total_row["KEBUTUHAN LOP (2X Target Scaling)"]
         total_row["% KECUKUPAN LOP F3-F4"] = total_row["EST REV LOP F3-F4"] / tk * 100 if tk else 0
         total_row["% KECUKUPAN ALL LOP"] = total_row["EST REV ALL LOP"] / tk * 100 if tk else 0
         total_row["GAP ALL LOP (Lower Better)"] = tk - total_row["EST REV ALL LOP"]
-        lop_df = pd.concat([lop_df, pd.DataFrame([total_row])], ignore_index=True)
 
-        def _color_pct_lop(v):
-            return f"color:{GREEN if v >= 100 else RED}; font-weight:700;"
+        def _lop_row_html(r, is_total=False):
+            f34_cls = "g" if r["% KECUKUPAN LOP F3-F4"] >= 100 else "r"
+            all_cls = "g" if r["% KECUKUPAN ALL LOP"] >= 100 else "r"
+            gap_cls = "g" if r["GAP ALL LOP (Lower Better)"] < 0 else "r"
+            tr_cls = "total" if is_total else ""
+            return f"""<tr class="{tr_cls}">
+                <td style="text-align:left; font-weight:{'800' if is_total else '600'};">{r['AM 2026']}</td>
+                <td>{r['T. SCAL RKAP FY 2026']:.2f}M</td>
+                <td>{r['KEBUTUHAN LOP (2X Target Scaling)']:.2f}M</td>
+                <td>{r['EST REV LOP F0-F2']:.2f}M</td>
+                <td>{r['EST REV LOP F3-F4']:.2f}M</td>
+                <td>{r['EST REV ALL LOP']:.2f}M</td>
+                <td class="{f34_cls}">{r['% KECUKUPAN LOP F3-F4']:.0f}%</td>
+                <td class="{all_cls}">{r['% KECUKUPAN ALL LOP']:.0f}%</td>
+                <td class="{gap_cls}">{r['GAP ALL LOP (Lower Better)']:.2f}M</td>
+            </tr>"""
 
-        def _color_gap_lop(v):
-            return f"color:{GREEN if v < 0 else RED}; font-weight:700;"
-
-        def _highlight_total_row(row):
-            if row["AM 2026"] == "TOTAL":
-                return [f"background-color:{TOTALBG}; font-weight:800;"] * len(row)
-            return [""] * len(row)
-
-        m_cols = ["T. SCAL RKAP FY 2026", "KEBUTUHAN LOP (2X Target Scaling)",
-                   "EST REV LOP F0-F2", "EST REV LOP F3-F4", "EST REV ALL LOP", "GAP ALL LOP (Lower Better)"]
-        pct_cols = ["% KECUKUPAN LOP F3-F4", "% KECUKUPAN ALL LOP"]
-        fmt = {c: "{:.2f}M".format for c in m_cols}
-        fmt.update({c: "{:.0f}%".format for c in pct_cols})
-
-        header_style = [{"selector": "th", "props": [
-            ("background-color", CYAN), ("color", HEADER_TEXT),
-            ("font-weight", "800"), ("text-align", "center"), ("padding", "8px"),
-        ]}]
-
-        styled_lop = (lop_df.style
-                      .format(fmt)
-                      .map(_color_pct_lop, subset=pct_cols)
-                      .map(_color_gap_lop, subset=["GAP ALL LOP (Lower Better)"])
-                      .apply(_highlight_total_row, axis=1)
-                      .set_table_styles(header_style))
-        st.dataframe(styled_lop, use_container_width=True, hide_index=True)
+        body_html = "".join(_lop_row_html(r) for r in lop_rows) + _lop_row_html(total_row, is_total=True)
+        headers = ["AM 2026", "T. SCAL RKAP FY 2026", "KEBUTUHAN LOP (2X Target Scaling)",
+                   "EST REV LOP F0-F2", "EST REV LOP F3-F4", "EST REV ALL LOP",
+                   "% KECUKUPAN LOP F3-F4", "% KECUKUPAN ALL LOP", "GAP ALL LOP (Lower Better)"]
+        render_html_table(headers, body_html, CYAN)
     else:
         st.caption("Belum ada data 'lop_fy2026' — isi lewat sheet AM_LOP_FY2026 di Excel.")
 
@@ -932,37 +889,36 @@ def render_prs():
         visit_rows.append(row)
 
     if visit_rows:
-        visit_df = pd.DataFrame(visit_rows)
         total_row = {"NAMA AM": "TOTAL VISIT", "TARGET": ""}
         grand_total = 0
         for mo in MONTHS_JAN_SEPT:
-            month_sum = sum(v for v in visit_df[mo] if isinstance(v, (int, float)))
+            month_sum = sum(r[mo] for r in visit_rows if isinstance(r[mo], (int, float)))
             total_row[mo] = month_sum
             grand_total += month_sum
         total_row["TOTAL"] = grand_total
         total_row["ACH"] = ""
-        visit_df = pd.concat([visit_df, pd.DataFrame([total_row])], ignore_index=True)
 
-        def _color_ach_visit(v):
-            try:
-                pct = float(str(v).replace("%", ""))
-            except ValueError:
-                return ""
-            return f"color:{GREEN if pct >= 100 else RED}; font-weight:700;"
+        def _visit_row_html(r, is_total=False):
+            ach_cls = ""
+            if isinstance(r.get("ACH"), str) and r["ACH"].endswith("%"):
+                try:
+                    pct = float(r["ACH"][:-1])
+                    ach_cls = "g" if pct >= 100 else "r"
+                except ValueError:
+                    pass
+            month_cells = "".join(f"<td>{r[mo]}</td>" for mo in MONTHS_JAN_SEPT)
+            tr_cls = "total" if is_total else ""
+            return f"""<tr class="{tr_cls}">
+                <td style="text-align:left; font-weight:{'800' if is_total else '600'};">{r['NAMA AM']}</td>
+                <td>{r['TARGET']}</td>
+                {month_cells}
+                <td style="font-weight:700;">{r['TOTAL']}</td>
+                <td class="{ach_cls}">{r.get('ACH', '')}</td>
+            </tr>"""
 
-        def _highlight_total_visit(row):
-            if row["NAMA AM"] == "TOTAL VISIT":
-                return [f"background-color:{TOTALBG}; font-weight:800;"] * len(row)
-            return [""] * len(row)
-
-        styled_visit = (visit_df.style
-                         .map(_color_ach_visit, subset=["ACH"])
-                         .apply(_highlight_total_visit, axis=1)
-                         .set_table_styles([{"selector": "th", "props": [
-                             ("background-color", GOLD), ("color", HEADER_TEXT),
-                             ("font-weight", "800"), ("text-align", "center"), ("padding", "8px"),
-                         ]}]))
-        st.dataframe(styled_visit, use_container_width=True, hide_index=True)
+        body_html = "".join(_visit_row_html(r) for r in visit_rows) + _visit_row_html(total_row, is_total=True)
+        headers = ["NAMA AM", "TARGET"] + MONTHS_JAN_SEPT + ["TOTAL", "ACH"]
+        render_html_table(headers, body_html, GOLD)
         st.caption("Catatan: kalau ada AM cuti/tidak ada data di bulan tertentu, kolom bulan itu akan kosong "
                    "(bukan sel gabungan bertuliskan status seperti di Excel aslinya).")
     else:
@@ -1047,6 +1003,19 @@ def _stat_box(label, value):
 def render_section_title(text):
     """Sub-judul section: kotak solid + highlight, dipakai sebagai pemisah antar baris di halaman AM Performance."""
     st.markdown(f"<div class='am-section-title'>{text}</div>", unsafe_allow_html=True)
+
+
+def render_html_table(headers, body_rows_html, header_bg):
+    """Render tabel HTML custom dengan header berwarna solid — dipakai untuk tabel besar
+    (LOP AM 2026, Visit 2026) supaya warna header pasti tampil, tidak tergantung st.dataframe."""
+    head_html = "".join(f"<th>{h}</th>" for h in headers)
+    html = f"""<div style="overflow-x:auto; border:1px solid {BORDER}; border-radius:10px;">
+    <table class="html-table">
+        <thead><tr style="background:{header_bg}; color:{HEADER_TEXT};">{head_html}</tr></thead>
+        <tbody>{body_rows_html}</tbody>
+    </table>
+    </div>"""
+    st.markdown(html, unsafe_allow_html=True)
 
 
 def _two_col_ach(l1, v1, l2, v2):
@@ -1179,11 +1148,13 @@ def render_am():
         ], gold=True), unsafe_allow_html=True)
 
     with col_cc:
-        cs = d["cc_summary"]
+        jml_cc = len(d["list_cc"])                                                              # RUMUS: jumlah baris di List CC
+        jml_tanpa_lop = sum(1 for c in d["list_cc"] if "TIDAK ADA" in str(c["jml_lop"]).upper())  # RUMUS: hitung yang "TIDAK ADA LOP"
+        jml_tanpa_scal = sum(1 for c in d["list_cc"] if "TIDAK ADA" in str(c["jml_scal"]).upper()) # RUMUS: hitung yang "TIDAK ADA SCALING"
         stats_html = f"""<div style="display:flex; gap:8px;">
-            <div style="flex:1;">{_stat_box("JML CC", cs["jml_cc"])}</div>
-            <div style="flex:1;">{_stat_box("TANPA LOP", cs["jml_cc_tanpa_lop"])}</div>
-            <div style="flex:1;">{_stat_box("TANPA SCAL", cs["jml_cc_tanpa_scal"])}</div>
+            <div style="flex:1;">{_stat_box("JML CC", jml_cc)}</div>
+            <div style="flex:1;">{_stat_box("TANPA LOP", jml_tanpa_lop)}</div>
+            <div style="flex:1;">{_stat_box("TANPA SCAL", jml_tanpa_scal)}</div>
         </div>"""
         st.markdown(stats_html, unsafe_allow_html=True)
         st.markdown(_panel(f"LIST CC (Cut off {d['cutoff_date']})", [(None, "")]), unsafe_allow_html=True)
@@ -1194,10 +1165,11 @@ def render_am():
         st.dataframe(cc_df, use_container_width=True, hide_index=True)
 
     with col_lobtable:
-        lb = d["lob_summary"]
+        jml_lob = len(d["list_lop"])                                    # RUMUS: jumlah baris di List LOP
+        est_nilai_bc = sum(l["est_bc"] for l in d["list_lop"])           # RUMUS: jumlah kolom Est BC
         stats_html = f"""<div style="display:flex; gap:8px;">
-            <div style="flex:1;">{_stat_box("JML LOB", lb["jml_lob"])}</div>
-            <div style="flex:1;">{_stat_box("EST NILAI BC", f"{lb['est_nilai_bc']:.4f}")}</div>
+            <div style="flex:1;">{_stat_box("JML LOB", jml_lob)}</div>
+            <div style="flex:1;">{_stat_box("EST NILAI BC", f"{est_nilai_bc:.4f}")}</div>
         </div>"""
         st.markdown(stats_html, unsafe_allow_html=True)
         st.markdown(_panel("LIST LOP ID", [(None, "")]), unsafe_allow_html=True)
@@ -1206,38 +1178,6 @@ def render_am():
             for l in d["list_lop"]
         ])
         st.dataframe(lop_df, use_container_width=True, hide_index=True)
-
-
-# ----------------------------------------------------------------------------
-# ACTION PLAN AM PAGE
-# ----------------------------------------------------------------------------
-def render_action():
-    st.button("← Overview", on_click=goto, args=("overview",))
-    st.markdown(f"## Action Plan <span style='color:{CYAN}'>AM</span>", unsafe_allow_html=True)
-
-    a = data["action"]
-    filt = st.radio("Filter", ["Semua", "Prioritas Tinggi", "Berjalan", "Selesai"],
-                     horizontal=True, label_visibility="collapsed")
-    view = a.copy()
-    if filt == "Prioritas Tinggi":
-        view = view[view["Priority"] == "Tinggi"]
-    elif filt == "Berjalan":
-        view = view[view["Status"] == "Berjalan"]
-    elif filt == "Selesai":
-        view = view[view["Status"] == "Selesai"]
-
-    def color_priority(v):
-        c = {"Tinggi": RED, "Sedang": GOLD, "Rendah": GREEN}.get(v, MUTED)
-        return f"color:{c}; font-weight:700;"
-
-    def color_status(v):
-        c = {"Selesai": GREEN, "Berjalan": CYAN, "Belum Mulai": MUTED}.get(v, MUTED)
-        return f"color:{c}; font-weight:700;"
-
-    styled = view.style.map(color_priority, subset=["Priority"]).map(color_status, subset=["Status"])
-    st.dataframe(styled, use_container_width=True, hide_index=True)
-
-    st.caption(f"Menampilkan {len(view)} dari {len(a)} action item.")
 
 
 # ----------------------------------------------------------------------------
