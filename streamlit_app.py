@@ -897,11 +897,17 @@ def render_prs():
         fmt = {c: "{:.2f}M".format for c in m_cols}
         fmt.update({c: "{:.0f}%".format for c in pct_cols})
 
+        header_style = [{"selector": "th", "props": [
+            ("background-color", CYAN), ("color", HEADER_TEXT),
+            ("font-weight", "800"), ("text-align", "center"), ("padding", "8px"),
+        ]}]
+
         styled_lop = (lop_df.style
                       .format(fmt)
                       .map(_color_pct_lop, subset=pct_cols)
                       .map(_color_gap_lop, subset=["GAP ALL LOP (Lower Better)"])
-                      .apply(_highlight_total_row, axis=1))
+                      .apply(_highlight_total_row, axis=1)
+                      .set_table_styles(header_style))
         st.dataframe(styled_lop, use_container_width=True, hide_index=True)
     else:
         st.caption("Belum ada data 'lop_fy2026' — isi lewat sheet AM_LOP_FY2026 di Excel.")
@@ -951,7 +957,11 @@ def render_prs():
 
         styled_visit = (visit_df.style
                          .map(_color_ach_visit, subset=["ACH"])
-                         .apply(_highlight_total_visit, axis=1))
+                         .apply(_highlight_total_visit, axis=1)
+                         .set_table_styles([{"selector": "th", "props": [
+                             ("background-color", GOLD), ("color", HEADER_TEXT),
+                             ("font-weight", "800"), ("text-align", "center"), ("padding", "8px"),
+                         ]}]))
         st.dataframe(styled_visit, use_container_width=True, hide_index=True)
         st.caption("Catatan: kalau ada AM cuti/tidak ada data di bulan tertentu, kolom bulan itu akan kosong "
                    "(bukan sel gabungan bertuliskan status seperti di Excel aslinya).")
