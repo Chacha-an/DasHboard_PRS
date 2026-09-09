@@ -488,6 +488,14 @@ LOGOS = [
 ]
 
 
+@st.cache_data(show_spinner=False)
+def _b64_file(path, mtime):
+    """Baca file & encode ke base64 SEKALI saja per file (di-cache Streamlit).
+    'mtime' disertakan supaya cache otomatis refresh kalau filenya diganti/redeploy."""
+    with open(path, "rb") as f:
+        return base64.b64encode(f.read()).decode()
+
+
 def render_logos():
     existing = [l for l in LOGOS if os.path.exists(os.path.join(LOGO_DIR, l["file"]))]
     if not existing:
@@ -495,8 +503,7 @@ def render_logos():
     imgs_html = ""
     for logo in existing:
         path = os.path.join(LOGO_DIR, logo["file"])
-        with open(path, "rb") as f:
-            b64 = base64.b64encode(f.read()).decode()
+        b64 = _b64_file(path, os.path.getmtime(path))
         ext = path.rsplit(".", 1)[-1]
         w, h = logo["width"], logo["height"]
         min_w = max(20, w * 0.55)
@@ -521,8 +528,7 @@ PHOTO_DIR = "assets/photos"
 def render_am_photo(filename):
     path = os.path.join(PHOTO_DIR, filename) if filename else None
     if path and os.path.exists(path):
-        with open(path, "rb") as f:
-            b64 = base64.b64encode(f.read()).decode()
+        b64 = _b64_file(path, os.path.getmtime(path))
         ext = path.rsplit(".", 1)[-1]
         inner = f'<img src="data:image/{ext};base64,{b64}">'
     else:
@@ -665,11 +671,10 @@ def render_overview():
     """, unsafe_allow_html=True)
     st.write("")
 
-    c1, c2, c3 = st.columns(3)
+    c1, c2 = st.columns(2)
     cards = [
         (c1, "📊", "PRS PERFORMANCE", "Ringkasan kinerja properti & resource", "prs"),
         (c2, "👥", "AM PERFORMANCE", "Kinerja Account Manager per wilayah", "am"),
-        (c3, "📱", "ACTION PLAN AM", "Daftar tindak lanjut & status progres", "action"),
     ]
     for col, icon, title, desc, key in cards:
         with col:
@@ -1003,5 +1008,3 @@ elif page == "prs":
     render_prs()
 elif page == "am":
     render_am()
-elif page == "action":
-    render_action()
