@@ -163,6 +163,28 @@ div[data-testid="stMetric"]{{
     letter-spacing:0.6px; padding:11px 16px; border-radius:10px; margin:20px 0 12px;
     box-shadow:0 0 16px {GLOW2};
 }}
+
+/* Grid kuadran PACER — 2x2, foto+nama AM ditempatkan sesuai kuadrannya */
+.quad-grid{{
+    display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr;
+    gap:8px; padding:4px;
+}}
+.quad-box{{
+    border:1px dashed {BORDER}; border-radius:10px; padding:8px; min-height:150px;
+    display:flex; flex-direction:column; align-items:center;
+}}
+.quad-box .quad-label{{
+    font-weight:800; font-size:10.5px; color:{MUTED}; text-align:center; margin-bottom:6px;
+    text-transform:uppercase; letter-spacing:0.4px;
+}}
+.quad-chips{{ display:flex; flex-wrap:wrap; justify-content:center; gap:4px; width:100%; }}
+.quad-chip{{ display:flex; flex-direction:column; align-items:center; width:56px; text-align:center; }}
+.quad-chip img, .quad-chip .noimg{{
+    width:40px; height:40px; border-radius:50%; object-fit:cover; border:2px solid {CYAN};
+}}
+.quad-chip .noimg{{ background:{BG2}; display:flex; align-items:center; justify-content:center; font-size:18px; }}
+.quad-chip .nm{{ font-size:8.5px; font-weight:700; margin-top:3px; line-height:1.15; color:{TEXT}; }}
+.quad-empty{{ color:{MUTED}; font-size:10px; text-align:center; padding-top:20px; }}
 </style>
 """, unsafe_allow_html=True)
 
@@ -178,23 +200,27 @@ PLOTLY_LAYOUT = dict(
 # DUMMY DATA (fallback kalau belum upload data real)
 # ----------------------------------------------------------------------------
 def dummy_data():
-    prs_monthly = pd.DataFrame({
-        "Month": ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun"],
-        "Realisasi": [78, 82, 85, 88, 90, 92],
-        "Target": [80, 80, 85, 85, 90, 90],
+    prs_monthly_revenue = pd.DataFrame({
+        "Month": ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"],
+        "Target": [14000000000, 14000000000, 15000000000, 15000000000, 16000000000, 16000000000,
+                   17000000000, 17000000000, 18000000000, 18000000000, 19000000000, 20000000000],
+        "Realisasi": [13200000000, 14500000000, 14800000000, 15600000000, 15900000000, 17100000000,
+                      16500000000, 18000000000, 17600000000, 19200000000, 18800000000, 20500000000],
     })
-    prs_kpi = pd.DataFrame({
-        "Metric": ["Occupancy Rate", "Revenue Achievement", "Maintenance Completion", "Asset Utilization"],
-        "Value": [87, 92, 78, 85],
-        "Target": [85, 90, 85, 85],
+    prs_monthly_ngtma = pd.DataFrame({
+        "Month": ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"],
+        "Target": [800000000, 800000000, 900000000, 900000000, 1000000000, 1000000000,
+                   1000000000, 1100000000, 1100000000, 1200000000, 1200000000, 1300000000],
+        "Realisasi": [500000000, 600000000, 700000000, 650000000, 800000000, 750000000,
+                      900000000, 950000000, 1000000000, 1050000000, 1100000000, 1150000000],
     })
-    prs_portfolio = pd.DataFrame({
-        "Type": ["Office", "Residential", "Retail", "Industrial"],
-        "Value": [38, 27, 20, 15],
+    prs_detail_revenue = pd.DataFrame({
+        "Metric": ["NON POTS", "POTS", "IFRS"],
+        "Value": [120000000000, 68000000000, -8000000000],
     })
-    prs_regional = pd.DataFrame({
-        "Region": ["Jakarta", "Surabaya", "Bandung", "Medan", "Makassar"],
-        "Value": [91, 84, 79, 73, 68],
+    prs_detail_mitra = pd.DataFrame({
+        "Mitra": ["Telkomsel", "Telkom Akses", "Mitra Distribusi A", "Mitra Distribusi B"],
+        "Nominal": [45000000000, 30000000000, 12000000000, 8000000000],
     })
     am = pd.DataFrame({
         "Name": ["Rina Wulandari", "Bagus Santoso", "Dewi Anggraini", "Fajar Nugroho",
@@ -222,8 +248,9 @@ def dummy_data():
         "Priority": ["Tinggi", "Sedang", "Rendah", "Tinggi", "Sedang", "Tinggi", "Rendah", "Tinggi"],
         "Status": ["Berjalan", "Belum Mulai", "Selesai", "Berjalan", "Berjalan", "Belum Mulai", "Selesai", "Berjalan"],
     })
-    return {"prs_monthly": prs_monthly, "prs_kpi": prs_kpi, "prs_portfolio": prs_portfolio,
-            "prs_regional": prs_regional, "am": am, "action": action}
+    return {"prs_monthly_revenue": prs_monthly_revenue, "prs_monthly_ngtma": prs_monthly_ngtma,
+            "prs_detail_revenue": prs_detail_revenue, "prs_detail_mitra": prs_detail_mitra,
+            "am": am, "action": action}
 
 
 # ----------------------------------------------------------------------------
@@ -253,6 +280,9 @@ AM_DETAIL_DEFAULT = {
                       "process": 34, "kec_lop": 228, "jml_visit": 110, "target_visit": 96,
                       "total_pacer": 96, "kuadran": "KUADRAN 3"},
         "kecukupan_lop": {"target": 4860000000, "est_rev_f3f4": 760000000, "est_rev_all": 15270000000},
+        "lop_fy2026": {"target_scal_rkap": 2380000000, "est_rev_f0f2": 14500000000, "est_rev_f3f4": 760000000},
+        "visit_monthly": {"target": 144, "months": {"Jan": 14, "Feb": 14, "Mar": 13, "Apr": 21, "May": 11,
+                                                       "Jun": 20, "Jul": 17, "Aug": 27, "Sept": 4}},
         "visit_bulan": {"cm": {"jml_visit": 7, "target": 16}, "ytd": {"jml_visit": 154, "target": 128}},
         "cc_summary": {"jml_cc": 9, "jml_cc_tanpa_lop": 2, "jml_cc_tanpa_scal": 3},
         "list_cc": [
@@ -298,6 +328,9 @@ AM_DETAIL_DEFAULT = {
                       "process": 60, "kec_lop": 250, "jml_visit": 130, "target_visit": 96,
                       "total_pacer": 156, "kuadran": "KUADRAN 1"},
         "kecukupan_lop": {"target": 5200000000, "est_rev_f3f4": 2100000000, "est_rev_all": 19800000000},
+        "lop_fy2026": {"target_scal_rkap": 2100000000, "est_rev_f0f2": 5200000000, "est_rev_f3f4": 2100000000},
+        "visit_monthly": {"target": 144, "months": {"Jan": 18, "Feb": 20, "Mar": "Cuti Melahirkan", "Apr": "Cuti Melahirkan",
+                                                       "May": 12, "Jun": 22, "Jul": 24, "Aug": 26, "Sept": 8}},
         "visit_bulan": {"cm": {"jml_visit": 18, "target": 16}, "ytd": {"jml_visit": 138, "target": 128}},
         "cc_summary": {"jml_cc": 12, "jml_cc_tanpa_lop": 1, "jml_cc_tanpa_scal": 2},
         "list_cc": [
@@ -333,6 +366,9 @@ AM_DETAIL_DEFAULT = {
                       "process": 22, "kec_lop": 140, "jml_visit": 78, "target_visit": 96,
                       "total_pacer": 74, "kuadran": "KUADRAN 4"},
         "kecukupan_lop": {"target": 3400000000, "est_rev_f3f4": 200000000, "est_rev_all": 2900000000},
+        "lop_fy2026": {"target_scal_rkap": 1700000000, "est_rev_f0f2": 1200000000, "est_rev_f3f4": 200000000},
+        "visit_monthly": {"target": 144, "months": {"Jan": 6, "Feb": 8, "Mar": 10, "Apr": 9, "May": 7,
+                                                       "Jun": 12, "Jul": 14, "Aug": 15, "Sept": 5}},
         "visit_bulan": {"cm": {"jml_visit": 4, "target": 16}, "ytd": {"jml_visit": 78, "target": 128}},
         "cc_summary": {"jml_cc": 5, "jml_cc_tanpa_lop": 2, "jml_cc_tanpa_scal": 3},
         "list_cc": [
@@ -348,10 +384,10 @@ AM_DETAIL_DEFAULT = {
 
 
 SHEET_MAP = {
-    "PRS_Bulanan": "prs_monthly",
-    "PRS_KPI": "prs_kpi",
-    "PRS_Portofolio": "prs_portfolio",
-    "PRS_Regional": "prs_regional",
+    "PRS_Monthly_Revenue": "prs_monthly_revenue",
+    "PRS_Monthly_NGTMA": "prs_monthly_ngtma",
+    "PRS_Detail_Revenue": "prs_detail_revenue",
+    "PRS_Detail_Mitra": "prs_detail_mitra",
     "AM_Performance": "am",
     "Action_Plan": "action",
 }
@@ -362,9 +398,9 @@ AM_DETAIL_SHEETS = ["AM_Summary", "AM_RealRev_Scaling", "AM_Pacer", "AM_Kecukupa
 
 
 def am_detail_to_sheets(am_detail):
-    """dict AM_DETAIL -> 6 DataFrame (untuk didownload sebagai template).
+    """dict AM_DETAIL -> 8 DataFrame (untuk didownload sebagai template).
     ACH & GAP TIDAK disertakan -> dihitung otomatis, tidak perlu diisi manual."""
-    summary_rows, rev_rows, pacer_rows, lop_rows, cc_rows, lop_id_rows = [], [], [], [], [], []
+    summary_rows, rev_rows, pacer_rows, lop_rows, cc_rows, lop_id_rows, lop_fy_rows, visit_m_rows = [], [], [], [], [], [], [], []
     for name, d in am_detail.items():
         cs, lb = d["cc_summary"], d["lob_summary"]
         summary_rows.append({
@@ -406,8 +442,18 @@ def am_detail_to_sheets(am_detail):
         for l in d["list_lop"]:
             lop_id_rows.append({"Name": name, "LopID": l["lop_id"], "Proj": l["proj"],
                                  "EstBC": l["est_bc"], "KetLOB": l["ket_lob"]})
+        lf = d.get("lop_fy2026")
+        if lf:
+            lop_fy_rows.append({"Name": name, "TargetScalRKAP": lf["target_scal_rkap"],
+                                 "EstRevF0F2": lf["est_rev_f0f2"], "EstRevF3F4": lf["est_rev_f3f4"]})
+        vm = d.get("visit_monthly")
+        if vm:
+            row = {"Name": name, "Target": vm["target"]}
+            row.update(vm["months"])
+            visit_m_rows.append(row)
     return (pd.DataFrame(summary_rows), pd.DataFrame(rev_rows), pd.DataFrame(pacer_rows),
-            pd.DataFrame(lop_rows), pd.DataFrame(cc_rows), pd.DataFrame(lop_id_rows))
+            pd.DataFrame(lop_rows), pd.DataFrame(cc_rows), pd.DataFrame(lop_id_rows),
+            pd.DataFrame(lop_fy_rows), pd.DataFrame(visit_m_rows))
 
 
 def build_am_detail_from_sheets(sheets):
@@ -421,6 +467,13 @@ def build_am_detail_from_sheets(sheets):
     lop = sheets["AM_Kecukupan_LOP_Visit"].set_index("Name")
     cc = sheets["AM_List_CC"]
     lop_id = sheets["AM_List_LOP"]
+    lop_fy = sheets.get("AM_LOP_FY2026")  # opsional — sheet baru, tidak wajib ada di file lama
+    if lop_fy is not None and not lop_fy.empty:
+        lop_fy = lop_fy.set_index("Name")
+    visit_m = sheets.get("AM_Visit_Monthly")  # opsional
+    if visit_m is not None and not visit_m.empty:
+        visit_m = visit_m.set_index("Name")
+    MONTHS_JAN_SEPT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept"]
 
     result = {}
     for name in summary.index:
@@ -469,6 +522,13 @@ def build_am_detail_from_sheets(sheets):
                         for _, row in cc_rows.iterrows()],
             "list_lop": [{"lop_id": row["LopID"], "proj": row["Proj"], "est_bc": row["EstBC"], "ket_lob": row["KetLOB"]}
                          for _, row in lop_id_rows.iterrows()],
+            "lop_fy2026": ({} if lop_fy is None or name not in lop_fy.index else {
+                "target_scal_rkap": lop_fy.loc[name, "TargetScalRKAP"],
+                "est_rev_f0f2": lop_fy.loc[name, "EstRevF0F2"],
+                "est_rev_f3f4": lop_fy.loc[name, "EstRevF3F4"]}),
+            "visit_monthly": ({} if visit_m is None or name not in visit_m.index else {
+                "target": visit_m.loc[name, "Target"],
+                "months": {m: visit_m.loc[name, m] for m in MONTHS_JAN_SEPT if m in visit_m.columns}}),
         }
     return result
 
@@ -585,12 +645,12 @@ def load_data(uploaded_file):
 def make_template_excel():
     buf = BytesIO()
     d = dummy_data()
-    summary_df, rev_df, pacer_df, lop_df, cc_df, lop_id_df = am_detail_to_sheets(AM_DETAIL_DEFAULT)
+    summary_df, rev_df, pacer_df, lop_df, cc_df, lop_id_df, lop_fy_df, visit_m_df = am_detail_to_sheets(AM_DETAIL_DEFAULT)
     with pd.ExcelWriter(buf, engine="openpyxl") as writer:
-        d["prs_monthly"].to_excel(writer, sheet_name="PRS_Bulanan", index=False)
-        d["prs_kpi"].to_excel(writer, sheet_name="PRS_KPI", index=False)
-        d["prs_portfolio"].to_excel(writer, sheet_name="PRS_Portofolio", index=False)
-        d["prs_regional"].to_excel(writer, sheet_name="PRS_Regional", index=False)
+        d["prs_monthly_revenue"].to_excel(writer, sheet_name="PRS_Monthly_Revenue", index=False)
+        d["prs_monthly_ngtma"].to_excel(writer, sheet_name="PRS_Monthly_NGTMA", index=False)
+        d["prs_detail_revenue"].to_excel(writer, sheet_name="PRS_Detail_Revenue", index=False)
+        d["prs_detail_mitra"].to_excel(writer, sheet_name="PRS_Detail_Mitra", index=False)
         d["am"].to_excel(writer, sheet_name="AM_Performance", index=False)
         d["action"].to_excel(writer, sheet_name="Action_Plan", index=False)
         summary_df.to_excel(writer, sheet_name="AM_Summary", index=False)
@@ -599,6 +659,8 @@ def make_template_excel():
         lop_df.to_excel(writer, sheet_name="AM_Kecukupan_LOP_Visit", index=False)
         cc_df.to_excel(writer, sheet_name="AM_List_CC", index=False)
         lop_id_df.to_excel(writer, sheet_name="AM_List_LOP", index=False)
+        lop_fy_df.to_excel(writer, sheet_name="AM_LOP_FY2026", index=False)
+        visit_m_df.to_excel(writer, sheet_name="AM_Visit_Monthly", index=False)
     return buf.getvalue()
 
 
@@ -623,10 +685,10 @@ with _icon_col:
         )
         with st.expander("Format sheet yang dibaca"):
             st.write("""
-            - **PRS_Bulanan**: Month, Realisasi, Target
-            - **PRS_KPI**: Metric, Value, Target
-            - **PRS_Portofolio**: Type, Value
-            - **PRS_Regional**: Region, Value
+            - **PRS_Monthly_Revenue**: Month, Target, Realisasi (12 baris, Jan-Des, angka penuh)
+            - **PRS_Monthly_NGTMA**: Month, Target, Realisasi (12 baris, Jan-Des, angka penuh)
+            - **PRS_Detail_Revenue**: Metric (NON POTS/POTS/IFRS), Value (angka penuh)
+            - **PRS_Detail_Mitra**: Mitra, Nominal (angka penuh, baris sebanyak jumlah mitra)
             - **AM_Performance**: Name, Region, Target, Score, Komunikasi, Negosiasi, Kepatuhan, KepuasanKlien, Pelaporan
             - **Action_Plan**: AM, Item, Due, Priority, Status
             - **AM_Summary**, **AM_RealRev_Scaling**, **AM_Pacer**, **AM_Kecukupan_LOP_Visit**,
@@ -692,39 +754,209 @@ def render_overview():
 # ----------------------------------------------------------------------------
 # PRS PERFORMANCE PAGE
 # ----------------------------------------------------------------------------
+def render_quadrant_chart(title, period_key, gold=False):
+    """Grid 2x2: Kuadran 1 kanan-atas, 2 kiri-atas, 3 kanan-bawah, 4 kiri-bawah.
+    Isinya foto+nama SEMUA AM, dikelompokkan berdasarkan field 'kuadran' di data masing-masing."""
+    groups = {"KUADRAN 1": [], "KUADRAN 2": [], "KUADRAN 3": [], "KUADRAN 4": []}
+    for name, d in data["am_detail"].items():
+        k = str(d.get(period_key, {}).get("kuadran", "")).upper().strip()
+        if k in groups:
+            groups[k].append((name, d.get("photo")))
+
+    def _chips(members):
+        if not members:
+            return "<div class='quad-empty'>Belum ada AM</div>"
+        html = "<div class='quad-chips'>"
+        for name, photo in members:
+            path = os.path.join(PHOTO_DIR, photo) if photo else None
+            if path and os.path.exists(path):
+                b64 = _b64_file(path, os.path.getmtime(path))
+                ext = path.rsplit(".", 1)[-1]
+                img_html = f"<img src='data:image/{ext};base64,{b64}'>"
+            else:
+                img_html = "<div class='noimg'>👤</div>"
+            short = name.split()[0]
+            html += f"<div class='quad-chip'>{img_html}<div class='nm'>{short}</div></div>"
+        return html + "</div>"
+
+    grid_html = f"""<div class='quad-grid'>
+        <div class='quad-box'><div class='quad-label'>KUADRAN 2</div>{_chips(groups["KUADRAN 2"])}</div>
+        <div class='quad-box'><div class='quad-label'>KUADRAN 1</div>{_chips(groups["KUADRAN 1"])}</div>
+        <div class='quad-box'><div class='quad-label'>KUADRAN 4</div>{_chips(groups["KUADRAN 4"])}</div>
+        <div class='quad-box'><div class='quad-label'>KUADRAN 3</div>{_chips(groups["KUADRAN 3"])}</div>
+    </div>"""
+    st.markdown(_panel(title, [(None, grid_html)], gold=gold), unsafe_allow_html=True)
+
+
+def _monthly_bar_chart(title, monthly_df):
+    """Bar chart Target vs Realisasi per bulan, dengan badge ACH% di atas tiap pasang bar."""
+    months = monthly_df["Month"].tolist()
+    targets_m = [t / 1_000_000_000 for t in monthly_df["Target"]]
+    reals_m = [r / 1_000_000_000 for r in monthly_df["Realisasi"]]
+    achs = [(r / t * 100 if t else 0) for r, t in zip(reals_m, targets_m)]
+
+    fig = go.Figure()
+    fig.add_bar(x=months, y=reals_m, name="Realisasi", marker_color=GOLD)
+    fig.add_bar(x=months, y=targets_m, name="Target", marker_color="rgba(63,214,240,0.4)")
+
+    annotations = []
+    for mo, ach, r, t in zip(months, achs, reals_m, targets_m):
+        color = GREEN if ach >= 100 else RED
+        annotations.append(dict(
+            x=mo, y=max(r, t) * 1.15, text=f"<b>{ach:.0f}%</b>", showarrow=False,
+            font=dict(size=10, color="#ffffff"),
+            bgcolor=color, borderpad=3,
+        ))
+    fig.update_layout(**PLOTLY_LAYOUT, barmode="group", annotations=annotations,
+                       yaxis_title="Miliar (M)", legend=dict(orientation="h", y=1.15, x=0))
+    st.markdown(f"##### {title}")
+    st.plotly_chart(fig, use_container_width=True)
+
+
 def render_prs():
     st.button("← Overview", on_click=goto, args=("overview",))
     st.markdown(f"## PRS <span style='color:{CYAN}'>Performance</span>", unsafe_allow_html=True)
 
-    kpi = data["prs_kpi"]
-    cols = st.columns(len(kpi))
-    for col, (_, row) in zip(cols, kpi.iterrows()):
-        delta = row["Value"] - row["Target"]
-        col.metric(row["Metric"], f"{row['Value']:.0f}%", f"{delta:+.1f} vs target")
+    # ============== SECTION 1: PACER AM PRS ==============
+    render_section_title("PACER AM PRS")
+    q1, q2 = st.columns(2)
+    with q1:
+        render_quadrant_chart("KUADRAN CM", "pacer_juli")
+    with q2:
+        render_quadrant_chart("KUADRAN YTD", "pacer_ytd", gold=True)
 
-    c1, c2 = st.columns([1.3, 1])
-    with c1:
-        st.markdown("#### Revenue Achievement Bulanan")
-        m = data["prs_monthly"]
-        fig = go.Figure()
-        fig.add_bar(x=m["Month"], y=m["Realisasi"], name="Realisasi", marker_color=GOLD)
-        fig.add_bar(x=m["Month"], y=m["Target"], name="Target", marker_color="rgba(63,214,240,0.4)")
-        fig.update_layout(**PLOTLY_LAYOUT, barmode="group", yaxis_ticksuffix="%")
-        st.plotly_chart(fig, use_container_width=True)
+    # ============== SECTION 2: PERFORMANCE REVENUE ==============
+    render_section_title("PERFORMANCE REVENUE")
+    r1, r2 = st.columns(2)
+    with r1:
+        _monthly_bar_chart("Revenue 2026", data["prs_monthly_revenue"])
+        dr = data["prs_detail_revenue"]
+        total_rev = dr["Value"].sum()
+        body = "".join(_row(row["Metric"], _fmt_m(row["Value"])) for _, row in dr.iterrows())
+        body += _row("TOTAL", _fmt_m(total_rev), "total")
+        st.markdown(_panel("DETAIL REVENUE", [(None, body)]), unsafe_allow_html=True)
 
-    with c2:
-        st.markdown("#### Komposisi Portofolio Aset")
-        p = data["prs_portfolio"]
-        fig = px.pie(p, names="Type", values="Value", hole=0.55,
-                      color_discrete_sequence=[GOLD, CYAN, GREEN, "#8a6ff0"])
-        fig.update_layout(**PLOTLY_LAYOUT)
-        st.plotly_chart(fig, use_container_width=True)
+    with r2:
+        _monthly_bar_chart("NGTMA 2026", data["prs_monthly_ngtma"])
+        dm = data["prs_detail_mitra"]
+        total_mitra = dm["Nominal"].sum()
+        body2 = "".join(_row(row["Mitra"], _fmt_m(row["Nominal"])) for _, row in dm.iterrows())
+        body2 += _row("TOTAL", _fmt_m(total_mitra), "total")
+        st.markdown(_panel("DETAIL MITRA", [(None, body2)], gold=True), unsafe_allow_html=True)
 
-    st.markdown("#### Kinerja per Regional")
-    r = data["prs_regional"].sort_values("Value", ascending=True)
-    fig = go.Figure(go.Bar(x=r["Value"], y=r["Region"], orientation="h", marker_color=GOLD))
-    fig.update_layout(**PLOTLY_LAYOUT, xaxis_ticksuffix="%", height=280)
-    st.plotly_chart(fig, use_container_width=True)
+    # ============== SECTION 3: VISIT DAN LOP AM 2026 ==============
+    render_section_title("VISIT DAN LOP AM 2026")
+
+    st.markdown(_panel("LOP AM 2026", [(None, "")]), unsafe_allow_html=True)
+    lop_rows = []
+    for name, d in data["am_detail"].items():
+        lf = d.get("lop_fy2026")
+        if not lf:
+            continue
+        target_scal = lf["target_scal_rkap"] / 1_000_000_000
+        kebutuhan_lop = target_scal * 2                                    # RUMUS: 2 x Target Scal RKAP
+        est_f0f2 = lf["est_rev_f0f2"] / 1_000_000_000
+        est_f3f4 = lf["est_rev_f3f4"] / 1_000_000_000
+        est_all = est_f0f2 + est_f3f4                                       # RUMUS: F0-F2 + F3-F4
+        pct_f3f4 = est_f3f4 / kebutuhan_lop * 100 if kebutuhan_lop else 0    # RUMUS: F3-F4 / Kebutuhan LOP
+        pct_all = est_all / kebutuhan_lop * 100 if kebutuhan_lop else 0      # RUMUS: All / Kebutuhan LOP
+        gap_all = kebutuhan_lop - est_all                                   # RUMUS: Kebutuhan LOP - All (Lower Better)
+        lop_rows.append({
+            "AM 2026": name, "T. SCAL RKAP FY 2026": target_scal, "KEBUTUHAN LOP (2X Target Scaling)": kebutuhan_lop,
+            "EST REV LOP F0-F2": est_f0f2, "EST REV LOP F3-F4": est_f3f4, "EST REV ALL LOP": est_all,
+            "% KECUKUPAN LOP F3-F4": pct_f3f4, "% KECUKUPAN ALL LOP": pct_all,
+            "GAP ALL LOP (Lower Better)": gap_all,
+        })
+
+    if lop_rows:
+        lop_df = pd.DataFrame(lop_rows)
+        total_row = {"AM 2026": "TOTAL"}
+        for col in ["T. SCAL RKAP FY 2026", "KEBUTUHAN LOP (2X Target Scaling)",
+                    "EST REV LOP F0-F2", "EST REV LOP F3-F4", "EST REV ALL LOP"]:
+            total_row[col] = lop_df[col].sum()
+        tk = total_row["KEBUTUHAN LOP (2X Target Scaling)"]
+        total_row["% KECUKUPAN LOP F3-F4"] = total_row["EST REV LOP F3-F4"] / tk * 100 if tk else 0
+        total_row["% KECUKUPAN ALL LOP"] = total_row["EST REV ALL LOP"] / tk * 100 if tk else 0
+        total_row["GAP ALL LOP (Lower Better)"] = tk - total_row["EST REV ALL LOP"]
+        lop_df = pd.concat([lop_df, pd.DataFrame([total_row])], ignore_index=True)
+
+        def _color_pct_lop(v):
+            return f"color:{GREEN if v >= 100 else RED}; font-weight:700;"
+
+        def _color_gap_lop(v):
+            return f"color:{GREEN if v < 0 else RED}; font-weight:700;"
+
+        def _highlight_total_row(row):
+            if row["AM 2026"] == "TOTAL":
+                return [f"background-color:{TOTALBG}; font-weight:800;"] * len(row)
+            return [""] * len(row)
+
+        m_cols = ["T. SCAL RKAP FY 2026", "KEBUTUHAN LOP (2X Target Scaling)",
+                   "EST REV LOP F0-F2", "EST REV LOP F3-F4", "EST REV ALL LOP", "GAP ALL LOP (Lower Better)"]
+        pct_cols = ["% KECUKUPAN LOP F3-F4", "% KECUKUPAN ALL LOP"]
+        fmt = {c: "{:.2f}M".format for c in m_cols}
+        fmt.update({c: "{:.0f}%".format for c in pct_cols})
+
+        styled_lop = (lop_df.style
+                      .format(fmt)
+                      .map(_color_pct_lop, subset=pct_cols)
+                      .map(_color_gap_lop, subset=["GAP ALL LOP (Lower Better)"])
+                      .apply(_highlight_total_row, axis=1))
+        st.dataframe(styled_lop, use_container_width=True, hide_index=True)
+    else:
+        st.caption("Belum ada data 'lop_fy2026' — isi lewat sheet AM_LOP_FY2026 di Excel.")
+
+    st.write("")
+    st.markdown(_panel("VISIT 2026", [(None, "")], gold=True), unsafe_allow_html=True)
+    MONTHS_JAN_SEPT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept"]
+    visit_rows = []
+    for name, d in data["am_detail"].items():
+        vm = d.get("visit_monthly")
+        if not vm:
+            continue
+        row = {"NAMA AM": name, "TARGET": vm["target"]}
+        total = 0
+        for mo in MONTHS_JAN_SEPT:
+            val = vm["months"].get(mo, "")
+            row[mo] = val
+            if isinstance(val, (int, float)):
+                total += val                                    # RUMUS: Total = jumlah bulan yang ada datanya
+        row["TOTAL"] = total
+        row["ACH"] = f"{(total / vm['target'] * 100 if vm['target'] else 0):.0f}%"   # RUMUS: Total / Target
+        visit_rows.append(row)
+
+    if visit_rows:
+        visit_df = pd.DataFrame(visit_rows)
+        total_row = {"NAMA AM": "TOTAL VISIT", "TARGET": ""}
+        grand_total = 0
+        for mo in MONTHS_JAN_SEPT:
+            month_sum = sum(v for v in visit_df[mo] if isinstance(v, (int, float)))
+            total_row[mo] = month_sum
+            grand_total += month_sum
+        total_row["TOTAL"] = grand_total
+        total_row["ACH"] = ""
+        visit_df = pd.concat([visit_df, pd.DataFrame([total_row])], ignore_index=True)
+
+        def _color_ach_visit(v):
+            try:
+                pct = float(str(v).replace("%", ""))
+            except ValueError:
+                return ""
+            return f"color:{GREEN if pct >= 100 else RED}; font-weight:700;"
+
+        def _highlight_total_visit(row):
+            if row["NAMA AM"] == "TOTAL VISIT":
+                return [f"background-color:{TOTALBG}; font-weight:800;"] * len(row)
+            return [""] * len(row)
+
+        styled_visit = (visit_df.style
+                         .map(_color_ach_visit, subset=["ACH"])
+                         .apply(_highlight_total_visit, axis=1))
+        st.dataframe(styled_visit, use_container_width=True, hide_index=True)
+        st.caption("Catatan: kalau ada AM cuti/tidak ada data di bulan tertentu, kolom bulan itu akan kosong "
+                   "(bukan sel gabungan bertuliskan status seperti di Excel aslinya).")
+    else:
+        st.caption("Belum ada data 'visit_monthly' — isi lewat sheet AM_Visit_Monthly di Excel.")
 
 
 # ----------------------------------------------------------------------------
