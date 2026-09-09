@@ -232,7 +232,7 @@ def dummy_data():
 # ----------------------------------------------------------------------------
 AM_DETAIL_DEFAULT = {
     "Mar'atus Sholicha": {
-        "photo": "photo_maratus.png",
+        "photo": "photo_maratus_sholicha.png",
         "period_ytd": "AGUSTUS 2026", "period_month": "SEPTEMBER", "cutoff_date": "19 September 2026",
         "real_rev": {
             "cm": {"target": 1730000000, "real": 1490000000},
@@ -277,7 +277,7 @@ AM_DETAIL_DEFAULT = {
         ],
     },
     "Rina Wulandari": {
-        "photo": "photo_rina.jpg",
+        "photo": "photo_rina_wulandari.png",
         "period_ytd": "AGUSTUS 2026", "period_month": "SEPTEMBER", "cutoff_date": "19 September 2026",
         "real_rev": {
             "cm": {"target": 1900000000, "real": 2050000000},
@@ -312,7 +312,7 @@ AM_DETAIL_DEFAULT = {
         ],
     },
     "Bagus Santoso": {
-        "photo": "photo_bagus.jpg",
+        "photo": "photo_bagus_santoso.png",
         "period_ytd": "AGUSTUS 2026", "period_month": "SEPTEMBER", "cutoff_date": "19 September 2026",
         "real_rev": {
             "cm": {"target": 1200000000, "real": 780000000},
