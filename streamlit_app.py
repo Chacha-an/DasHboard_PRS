@@ -243,6 +243,7 @@ def dummy_data():
 AM_DETAIL_DEFAULT = {
     "Mar'atus Sholicha": {
         "photo": "photo_maratus_sholicha.png",
+        "display_name": "Licha",  # contoh nama panggilan custom — muncul di kuadran, boleh dikosongkan
         "period_ytd": "AGUSTUS 2026", "period_month": "SEPTEMBER", "cutoff_date": "19 September 2026",
         "real_rev": {
             "cm": {"target": 1730000000, "real": 1490000000},
@@ -360,6 +361,10 @@ AM_DETAIL_DEFAULT = {
 }
 
 
+# Urutan bulan penuh 1 tahun — dipakai untuk deteksi kolom bulan otomatis di sheet AM_Visit_Monthly
+# (tabel Visit 2026 hanya menampilkan bulan yang benar-benar ada kolomnya di Excel, urut kalender)
+FULL_MONTH_ORDER = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"]
+
 SHEET_MAP = {
     "PRS_Monthly_Revenue": "prs_monthly_revenue",
     "PRS_Monthly_NGTMA": "prs_monthly_ngtma",
@@ -378,7 +383,7 @@ def am_detail_to_sheets(am_detail):
     summary_rows, rev_rows, pacer_rows, lop_rows, cc_rows, lop_id_rows, lop_fy_rows, visit_m_rows = [], [], [], [], [], [], [], []
     for name, d in am_detail.items():
         summary_rows.append({
-            "Name": name, "PhotoFile": d.get("photo", ""),
+            "Name": name, "PhotoFile": d.get("photo", ""), "DisplayName": d.get("display_name", ""),
             "PeriodYTD": d["period_ytd"], "PeriodMonth": d["period_month"], "CutoffDate": d["cutoff_date"],
         })
         rr, rs = d["real_rev"], d["real_scaling"]
@@ -445,7 +450,9 @@ def build_am_detail_from_sheets(sheets):
     visit_m = sheets.get("AM_Visit_Monthly")  # opsional
     if visit_m is not None and not visit_m.empty:
         visit_m = visit_m.set_index("Name")
-    MONTHS_JAN_SEPT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept"]
+        visit_months_detected = [m for m in FULL_MONTH_ORDER if m in visit_m.columns]  # otomatis ikut kolom yang ADA di Excel
+    else:
+        visit_months_detected = []
 
     result = {}
     for name in summary.index:
@@ -467,6 +474,7 @@ def build_am_detail_from_sheets(sheets):
 
         result[name] = {
             "photo": s.get("PhotoFile", ""),
+            "display_name": s.get("DisplayName", "") if pd.notna(s.get("DisplayName", "")) else "",
             "period_ytd": s["PeriodYTD"], "period_month": s["PeriodMonth"], "cutoff_date": s["CutoffDate"],
             "real_rev": ({} if r is None else {
                 "cm": {"target": r["RevCMTarget"], "real": r["RevCMReal"]},
@@ -498,7 +506,7 @@ def build_am_detail_from_sheets(sheets):
                 "est_rev_f3f4": lop_fy.loc[name, "EstRevF3F4"]}),
             "visit_monthly": ({} if visit_m is None or name not in visit_m.index else {
                 "target": visit_m.loc[name, "Target"],
-                "months": {m: visit_m.loc[name, m] for m in MONTHS_JAN_SEPT if m in visit_m.columns}}),
+                "months": {m: visit_m.loc[name, m] for m in visit_months_detected}}),
         }
     return result
 
@@ -661,6 +669,8 @@ with _icon_col:
               **AM_List_CC**, **AM_List_LOP**: detail scorecard per-AM (6 sheet ini harus lengkap semua
               supaya terbaca — kalau salah satu kosong, tampilan AM Performance tetap pakai data contoh).
               Kolom `PhotoFile` di **AM_Summary** diisi nama file foto yang ditaruh di folder `assets/photos/`.
+              Kolom `DisplayName` di **AM_Summary** (opsional) untuk nama panggilan custom yang tampil di kuadran PACER —
+              kosongkan kalau mau pakai format otomatis (Nama Depan + Inisial Belakang).
             """)
 
         data, is_real, source = load_data(uploaded)
@@ -727,13 +737,13 @@ def render_quadrant_chart(title, period_key, gold=False):
     for name, d in data["am_detail"].items():
         k = str(d.get(period_key, {}).get("kuadran", "")).upper().strip()
         if k in groups:
-            groups[k].append((name, d.get("photo")))
+            groups[k].append((name, d.get("photo"), d.get("display_name")))
 
     def _chips(members):
         if not members:
             return "<div class='quad-empty'>Belum ada AM</div>"
         html = "<div class='quad-chips'>"
-        for name, photo in members:
+        for name, photo, display_name in members:
             path = os.path.join(PHOTO_DIR, photo) if photo else None
             if path and os.path.exists(path):
                 b64 = _b64_file(path, os.path.getmtime(path))
@@ -741,7 +751,11 @@ def render_quadrant_chart(title, period_key, gold=False):
                 img_html = f"<img src='data:image/{ext};base64,{b64}'>"
             else:
                 img_html = "<div class='noimg'>👤</div>"
-            short = name.split()[0]
+            if display_name:
+                short = display_name                      # PRIORITAS: nama custom dari Excel kalau diisi
+            else:
+                parts = name.split()
+                short = f"{parts[0]} {parts[-1][0]}." if len(parts) > 1 else parts[0]  # fallback otomatis
             html += f"<div class='quad-chip'>{img_html}<div class='nm'>{short}</div></div>"
         return html + "</div>"
 
@@ -762,8 +776,8 @@ def _monthly_bar_chart(title, monthly_df):
     achs = [(r / t * 100 if t else 0) for r, t in zip(reals_m, targets_m)]
 
     fig = go.Figure()
-    fig.add_bar(x=months, y=reals_m, name="Realisasi", marker_color=GOLD)
     fig.add_bar(x=months, y=targets_m, name="Target", marker_color="rgba(63,214,240,0.4)")
+    fig.add_bar(x=months, y=reals_m, name="Realisasi", marker_color=GOLD)
 
     annotations = []
     for mo, ach, r, t in zip(months, achs, reals_m, targets_m):
@@ -871,7 +885,16 @@ def render_prs():
 
     st.write("")
     st.markdown(_panel("VISIT 2026", [(None, "")], gold=True), unsafe_allow_html=True)
-    MONTHS_JAN_SEPT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept"]
+    # Deteksi otomatis bulan mana saja yang ADA datanya (union dari semua AM), urut kalender.
+    # Jadi kalau Excel baru diisi sampai Agustus, kolom cuma sampai Agustus — nambah otomatis
+    # begitu bulan berikutnya diisi di Excel dan diupload ulang.
+    months_present = set()
+    for _, d in data["am_detail"].items():
+        vm = d.get("visit_monthly")
+        if vm:
+            months_present.update(vm["months"].keys())
+    MONTHS_ACTIVE = [m for m in FULL_MONTH_ORDER if m in months_present]
+
     visit_rows = []
     for name, d in data["am_detail"].items():
         vm = d.get("visit_monthly")
@@ -879,7 +902,7 @@ def render_prs():
             continue
         row = {"NAMA AM": name, "TARGET": vm["target"]}
         total = 0
-        for mo in MONTHS_JAN_SEPT:
+        for mo in MONTHS_ACTIVE:
             val = vm["months"].get(mo, "")
             row[mo] = val
             if isinstance(val, (int, float)):
@@ -891,7 +914,7 @@ def render_prs():
     if visit_rows:
         total_row = {"NAMA AM": "TOTAL VISIT", "TARGET": ""}
         grand_total = 0
-        for mo in MONTHS_JAN_SEPT:
+        for mo in MONTHS_ACTIVE:
             month_sum = sum(r[mo] for r in visit_rows if isinstance(r[mo], (int, float)))
             total_row[mo] = month_sum
             grand_total += month_sum
@@ -906,7 +929,7 @@ def render_prs():
                     ach_cls = "g" if pct >= 100 else "r"
                 except ValueError:
                     pass
-            month_cells = "".join(f"<td>{r[mo]}</td>" for mo in MONTHS_JAN_SEPT)
+            month_cells = "".join(f"<td>{r[mo]}</td>" for mo in MONTHS_ACTIVE)
             tr_cls = "total" if is_total else ""
             return f"""<tr class="{tr_cls}">
                 <td style="text-align:left; font-weight:{'800' if is_total else '600'};">{r['NAMA AM']}</td>
@@ -917,7 +940,7 @@ def render_prs():
             </tr>"""
 
         body_html = "".join(_visit_row_html(r) for r in visit_rows) + _visit_row_html(total_row, is_total=True)
-        headers = ["NAMA AM", "TARGET"] + MONTHS_JAN_SEPT + ["TOTAL", "ACH"]
+        headers = ["NAMA AM", "TARGET"] + MONTHS_ACTIVE + ["TOTAL", "ACH"]
         render_html_table(headers, body_html, CYAN)
         st.caption("Catatan: kalau ada AM cuti/tidak ada data di bulan tertentu, kolom bulan itu akan kosong "
                    "(bukan sel gabungan bertuliskan status seperti di Excel aslinya).")
